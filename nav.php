@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cocktails</title>
 
     <script>
+        function chargerCategorie(categorie) {
+            // Charger la hiérarchie avec la catégorie sélectionnée
+            fetch("Hierarchie.php?categorie=" + encodeURIComponent(categorie))
+            .then(response => response.text())
+            .then(hierarchie => {
+                document.getElementById('contenu-hierarchie').innerHTML = hierarchie;
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                document.getElementById('contenu-hierarchie').innerHTML = '<p>Erreur lors du chargement de la hiérarchie.</p>';
+            });
+        }
 
-    function ouvrirHierarchie() {
-        fetch("Hierarchie.php")
-        .then(response => response.text())
-        .then(hierarchie => {
-             document.getElementById('hierarchie').innerHTML = hierarchie;
-        })
-    }
+        function ouvrirHierarchie() {
+            // Charger la hiérarchie racine
+            chargerCategorie('Aliment');
+        }
 
+        // Charger la hiérarchie au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            ouvrirHierarchie();
+        });
     </script>
-
 </head>
 <body>
-    <nav style="border: 1px solid black; display: inline ; padding: 10px">
+    <nav>
         <button type="button" onClick="ouvrirHierarchie()">Navigation</button>
         <button type="button">Recette <img src="Photos/Coeur_plein.png" width="15px" height="15px"/></button>
         Recherche: 
@@ -27,11 +39,15 @@
             <input type="search" />
             <button type="submit"><img src="Photos/Loupe.png" width="15px" height="15px"/></button>
         </form>
-        <button>Zone de connexionaa</button>
+        <button>Zone de connexion</button>
     </nav>
-    <div style="display: flex ; gap : 10px;">
-        <aside style="border: 1px solid black; padding: 10px; margin: 15px 0px;" id="hierarchie"></aside>
-        <main style="border: 1px solid black; padding: 10px; margin: 15px 0px;" id="cocktail"></main>
-    </div>
+    
+    <aside id="contenu-hierarchie" style="border: 1px solid black; padding: 10px; margin-top: 10px; width: 200px;">
+        <p>Chargement de la hiérarchie...</p>
+    </aside>
+    
+    <main>
+        <!-- Contenu principal ici -->
+    </main>
 </body>
 </html>
