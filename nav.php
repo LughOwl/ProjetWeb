@@ -27,7 +27,7 @@
             <input type="search" />
             <button type="submit"><img src="Photos/Loupe.png" width="15px" height="15px"/></button>
         </form>
-        <button>Zone de connexion</button>
+        <button>Zone de connexionaa</button>
     </nav>
     <div style="display: flex ; gap : 10px;">
         <aside style="border: 1px solid black; padding: 10px; margin: 15px 0px;" id="hierarchie"></aside>
