@@ -29,11 +29,9 @@
         </form>
         <button>Zone de connexion</button>
     </nav>
-    <aside style="border: 1px solid black; padding: 10px;" id="hierarchie">
-    
-    </aside>
-    <main>
-        
-    </main>
+    <div style="display: flex ; gap : 10px;">
+        <aside style="border: 1px solid black; padding: 10px; margin: 15px 0px;" id="hierarchie"></aside>
+        <main style="border: 1px solid black; padding: 10px; margin: 15px 0px;" id="cocktail"></main>
+    </div>
 </body>
 </html>
