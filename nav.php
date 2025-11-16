@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <script>
+
     function ouvrirHierarchie() {
-        
+        fetch("Hierarchie.php")
+        .then(response => response.text())
+        .then(hierarchie => {
+             document.getElementById('hierarchie').innerHTML = hierarchie;
+        })
     }
+
+    </script>
+
 </head>
 <body>
     <nav style="border: 1px solid black; display: inline ; padding: 10px">
@@ -20,7 +29,7 @@
         </form>
         <button>Zone de connexion</button>
     </nav>
-    <aside>
+    <aside style="border: 1px solid black; padding: 10px;" id="hierarchie">
     
     </aside>
     <main>
