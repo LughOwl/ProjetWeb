@@ -3,7 +3,7 @@
 
     $cocktailsTrouves = [];
     $sousCategories = [];
-
+    $i = 0;
    
     $categorieActuelle = isset($_GET['categorie']) ? htmlspecialchars($_GET['categorie']) : 'Aucune catégorie spécifiée';
     
@@ -37,12 +37,19 @@
         }
         echo '<img src="Photos/'.$nomImage.'" width= "70px" height= "100px">'.'</br>';
     }
-    
-    function afficherCocktail($recette) {
+
+    function afficherCocktail($recette,$i) {
+
+        $buttonId = 'bouton'.$i;
+        $imageId = 'Coeur'.$i;
+
         echo '<div style="border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; padding: 15px; width: 150px; height: 300px; align-items: center;">';
         echo '<div style = "display: inline;">';
         echo $recette['titre'];
         //bouton coeur
+        echo'<button id="'.$buttonId.'" onclick="ChangerCoeur(\''.$imageId.'\')">';
+        echo'<img id="'.$imageId.'" src="Photos/Coeur_vide.png" width="50px" height="50px"/>';
+        echo'</button>';
         echo '</div>'.'</br>';
         afficherImage($recette);
         
@@ -54,7 +61,8 @@
 
     if (count($cocktailsTrouves) > 0) {
         foreach ($cocktailsTrouves as $recette) {
-            afficherCocktail($recette);
+            afficherCocktail($recette,$i);
+            $i = $i + 1;
         }
     } else {
         echo '<p>Aucun cocktail trouvé correspondant à la catégorie et ses sous-catégories.</p>';

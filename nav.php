@@ -6,6 +6,15 @@
     <title>Cocktails</title>
 
     <script>
+        function ChangerCoeur(imageId) {
+            let img = document.getElementById(imageId);
+            if (img.src.includes("Coeur_vide.png")) {
+                img.src = "Photos/Coeur_plein.png";
+            } else {
+                img.src = "Photos/Coeur_vide.png";
+            }
+        };
+         
         function chargerCategorie(categorie) {
             // Charger la hiérarchie avec la catégorie sélectionnée
             fetch("Hierarchie.php?categorie=" + encodeURIComponent(categorie))
