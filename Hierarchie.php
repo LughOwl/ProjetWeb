@@ -37,18 +37,11 @@ function genererFilAriane($categorie, $hierarchie) {
         if ($index > 0) {
             $html .= ' / ';
         }
-        
-        if ($index === count($filAriane) - 1) {
-            // Catégorie actuelle (non cliquable)
-            $html .= '<span>' . htmlspecialchars($categorie) . '</span>';
-        } else {
-            // Lien vers la catégorie avec appel JavaScript
-            $html .= '<a href="javascript:void(0)" onclick="chargerCategorie(\'' . addslashes($categorie) . '\')">';
-            $html .= htmlspecialchars($categorie);
-            $html .= '</a>';
-        }
+        // Lien vers la catégorie avec appel JavaScript
+        $html .= '<a href="javascript:void(0)" onclick="chargerCategorie(\'' . addslashes($categorie) . '\')">';
+        $html .= htmlspecialchars($categorie);
+        $html .= '</a>';
     }
-    
     return $html;
 }
 

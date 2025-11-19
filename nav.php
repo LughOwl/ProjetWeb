@@ -17,6 +17,16 @@
                 console.error('Erreur:', error);
                 document.getElementById('contenu-hierarchie').innerHTML = '<p>Erreur lors du chargement de la hiérarchie.</p>';
             });
+            // Charger la liste des cocktails pour la catégorie sélectionnée
+            fetch("Cocktails.php?categorie=" + encodeURIComponent(categorie))
+            .then(response => response.text())
+            .then(cocktails => {
+                document.getElementById('liste-cocktails').innerHTML = cocktails;
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                document.getElementById('liste-cocktails').innerHTML = '<p>Erreur lors du chargement des cocktails.</p>';
+            });
         }
 
         function ouvrirHierarchie() {
@@ -41,13 +51,15 @@
         </form>
         <button>Zone de connexion</button>
     </nav>
+    <div style="display: flex; gap: 10px;">
+        <aside id="contenu-hierarchie" style="border: 1px solid black; padding: 10px 10px 40px 10px; margin-top: 10px; width: 200px; height: auto;">
+            <!-- Hiérarchie chargée ici -->
+        </aside>
     
-    <aside id="contenu-hierarchie" style="border: 1px solid black; padding: 10px; margin-top: 10px; width: 200px;">
-        <p>Chargement de la hiérarchie...</p>
-    </aside>
+        <main id="liste-cocktails" style="border: 1px solid black; padding: 10px 10px 40px 10px; margin-top: 10px; width: 500px; height: auto;">
+            <!-- Contenu principal ici -->
+        </main>
+    </div>
     
-    <main>
-        <!-- Contenu principal ici -->
-    </main>
 </body>
 </html>
