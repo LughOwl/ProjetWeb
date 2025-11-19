@@ -1,8 +1,9 @@
+<strong>Liste des cocktails</strong>
 <?php
     include 'Donnees.inc.php';
 
     $cocktailsTrouves = [];
-    $sousCategories = [];
+    $sousCategories = []; // Cette variable est déclarée ici
     $i = 0;
    
     $categorieActuelle = isset($_GET['categorie']) ? htmlspecialchars($_GET['categorie']) : 'Aucune catégorie spécifiée';
@@ -21,10 +22,14 @@
         return $toutesLesSousCategories;
     }
 
-    $sousCategories = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie));
+    // Ici, vous utilisez la variable $sousCategories pour stocker les aliments à rechercher
+    $sousCategories = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie)); 
 
-    foreach ($Recettes as $recette) {
+    // CORRECTION : On récupère l'ID de la recette ($recette_id) et on l'ajoute à la recette
+    foreach ($Recettes as $recette_id => $recette) { 
         if (array_intersect($recette['index'], $sousCategories)) {
+            // CORRECTION : Ajout de l'ID à la recette pour que afficherCocktail puisse l'utiliser
+            $recette['id'] = $recette_id; 
             $cocktailsTrouves[] = $recette;
         }
     }
@@ -53,10 +58,13 @@
         echo '</div>'.'</br>';
         afficherImage($recette);
         
+        echo '<div style="font-size: 0.8em; margin-top: 10px; text-align: left; width: 100%; height: 100px; overflow: hidden;">';
         foreach($recette['index'] as $ingredient){
-            echo $ingredient.'</br>';
+            echo '• ' . htmlspecialchars($ingredient) . '</br>';
         }
-        echo '</div>'; 
+        echo '</div>';
+        
+        echo '</div>';
     }
 
     if (count($cocktailsTrouves) > 0) {
@@ -68,5 +76,3 @@
         echo '<p>Aucun cocktail trouvé correspondant à la catégorie et ses sous-catégories.</p>';
     }
 ?>
-
-<strong>Liste des cocktails</strong>
