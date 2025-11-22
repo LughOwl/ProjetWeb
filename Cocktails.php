@@ -47,13 +47,13 @@
 
         $buttonId = 'bouton'.$i;
         $imageId = 'Coeur'.$i;
-
+        $imageCoeur = "Photos/Coeur_vide.png";
         echo '<div style="border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; padding: 15px; width: 150px; height: 300px; align-items: center;">';
         echo '<div style = "display: inline;">';
         echo $recette['titre'];
-        //bouton coeur
-        echo'<button id="'.$buttonId.'" onclick="ChangerCoeur(\''.$imageId.'\')">';
-        echo'<img id="'.$imageId.'" src="Photos/Coeur_vide.png" width="50px" height="50px"/>';
+        //bouton coeur 
+        echo'<button id="'.$buttonId.'" onclick="ChangerCoeur(\''.$imageId.'\', \''.$recette['id'].'\', \''.$imageCoeur.'\')">';
+        echo'<img id="'.$imageId.'" src="'.$imageCoeur.'" width="50px" height="50px"/>';
         echo'</button>';
         echo '</div>'.'</br>';
         afficherImage($recette);

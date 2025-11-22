@@ -1,3 +1,10 @@
+<?php 
+    session_start();
+    if(!isset($_SESSION["user"])){
+        $_SESSION["user"]["recettesFavoris"] = [];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,15 +13,33 @@
     <title>Cocktails</title>
 
     <script>
-        function ChangerCoeur(imageId) {
+        
+        recettesFavoris = [];
+
+        function AjouterFavoris(id){
+            recettesFavoris.push(id);
+            recettesFavoris.sort();
+        };
+
+        function RetirerFavoris(id){
+            index = recettesFavoris.indexOf(id);
+            recettesFavoris.splice(index,1);
+        };
+
+        function ChangerCoeur(imageId,indice,imageCoeur) {
             let img = document.getElementById(imageId);
             if (img.src.includes("Coeur_vide.png")) {
                 img.src = "Photos/Coeur_plein.png";
+                imageCoeur = img.src;
+                AjouterFavoris(indice);
             } else {
                 img.src = "Photos/Coeur_vide.png";
+                imageCoeur = img.src;
+                RetirerFavoris(indice);
             }
         };
-         
+        
+
         function chargerCategorie(categorie) {
             // Charger la hiérarchie avec la catégorie sélectionnée
             fetch("Hierarchie.php?categorie=" + encodeURIComponent(categorie))
