@@ -1,6 +1,5 @@
 <strong>Liste des cocktails</strong>
 <?php
-    // Pas de include 'Donnees.inc.php' ici non plus (déjà dans nav.php)
 
     $cocktailsTrouves = [];
     
@@ -15,13 +14,13 @@
         return $toutes;
     }
 
-    $ingredientsRecherches = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie)); 
+    $sousCategories = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie)); 
 
     // Recherche des cocktails
     foreach ($Recettes as $id => $recette) { 
         // On vérifie si la recette contient un des ingrédients
-        if (array_intersect($recette['index'], $ingredientsRecherches)) {
-            $recette['id_reel'] = $id; // On garde l'ID (0, 1, 2...)
+        if (array_intersect($recette['index'], $sousCategories)) {
+            $recette['id'] = $id; // On garde l'ID (0, 1, 2...)
             $cocktailsTrouves[] = $recette;
         }
     }
@@ -31,14 +30,19 @@
         foreach ($cocktailsTrouves as $recette) {
             
             // Gestion du Cœur (Vide ou Plein) selon la session PHP
-            $estFavori = in_array($recette['id_reel'], $_SESSION["user"]["recettesFavoris"]);
-            $imageCoeur = $estFavori ? "Photos/Coeur_plein.png" : "Photos/Coeur_vide.png";
+            if(in_array($recette['id'], $_SESSION["user"]["recettesFavoris"])){
+                $imageCoeur = "Photos/Coeur_plein.png";
+            } else {
+                $imageCoeur = "Photos/Coeur_vide.png";
+            }
 
-            echo '<div class="cocktail-card">';
+            $id_html = 'recette-' . $recette['id'];
+
+            echo '<div class="cocktail-card" id="' . $id_html . '">';
             echo '<strong>' . $recette['titre'] . '</strong> ';
             
             // LE LIEN MAGIQUE : On recharge la page en gardant la catégorie + action toggle
-            echo '<a href="nav.php?categorie=' . urlencode($categorieActuelle) . '&toggle_favori=' . $recette['id_reel'] . '">';
+            echo '<a href="index.php?categorie=' . urlencode($categorieActuelle) . '&est_favori=' . $recette['id'] . '">';
             echo '<img src="'.$imageCoeur.'" width="20px" height="20px" style="vertical-align:middle;"/>';
             echo '</a><br><br>';
 

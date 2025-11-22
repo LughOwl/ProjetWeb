@@ -1,18 +1,16 @@
 <?php
-// Pas besoin de include 'Donnees.inc.php' car nav.php l'a déjà fait
 
 // Fonction pour générer le fil d'Ariane
 function genererFilAriane($categorie, $hierarchie) {
     $filAriane = [];
-    $catTemp = $categorie;
     
     // Remonter la hiérarchie
-    while ($catTemp && $catTemp !== 'Aliment') {
-        array_unshift($filAriane, $catTemp);
+    while ($categorie && $categorie !== 'Aliment') {
+        array_unshift($filAriane, $categorie);
         $trouvee = false;
         foreach ($hierarchie as $cat => $data) {
-            if (isset($data['sous-categorie']) && in_array($catTemp, $data['sous-categorie'])) {
-                $catTemp = $cat;
+            if (isset($data['sous-categorie']) && in_array($categorie, $data['sous-categorie'])) {
+                $categorie = $cat;
                 $trouvee = true;
                 break;
             }
@@ -26,8 +24,8 @@ function genererFilAriane($categorie, $hierarchie) {
     foreach ($filAriane as $index => $cat) {
         if ($index > 0) $html .= ' / ';
         // LIEN STANDARD
-        $html .= '<a href="nav.php?categorie=' . urlencode($cat) . '">';
-        $html .= htmlspecialchars($cat);
+        $html .= '<a href="index.php?page=navigation&categorie=' . urlencode($cat) . '">';
+        $html .= $cat;
         $html .= '</a>';
     }
     return $html;
@@ -42,8 +40,8 @@ if (isset($Hierarchie[$categorieActuelle]['sous-categorie'])) {
     foreach ($Hierarchie[$categorieActuelle]['sous-categorie'] as $sousCat) {
         echo '<li>';
         // LIEN STANDARD
-        echo '<a href="nav.php?categorie=' . urlencode($sousCat) . '">';
-        echo htmlspecialchars($sousCat);
+        echo '<a href="index.php?page=navigation&categorie=' . urlencode($sousCat) . '">';
+        echo $sousCat;
         echo '</a>';
         echo '</li>';
     }
