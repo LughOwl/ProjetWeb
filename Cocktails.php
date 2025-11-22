@@ -1,78 +1,61 @@
 <strong>Liste des cocktails</strong>
 <?php
-    include 'Donnees.inc.php';
+    // Pas de include 'Donnees.inc.php' ici non plus (déjà dans nav.php)
 
     $cocktailsTrouves = [];
-    $sousCategories = []; // Cette variable est déclarée ici
-    $i = 0;
-   
-    $categorieActuelle = isset($_GET['categorie']) ? htmlspecialchars($_GET['categorie']) : 'Aucune catégorie spécifiée';
     
-    
+    // Fonction récursive pour trouver tous les sous-ingrédients
     function trouverToutesLesCategories($categorie, $hierarchie) {
-        $toutesLesSousCategories = [$categorie]; // Ajoute la catégorie actuelle
-        
+        $toutes = [$categorie];
         if (isset($hierarchie[$categorie]['sous-categorie'])) {
-            $sousCategories = $hierarchie[$categorie]['sous-categorie'];
-            
-            foreach ($sousCategories as $sousCat) {
-                $toutesLesSousCategories = array_merge($toutesLesSousCategories, trouverToutesLesCategories($sousCat, $hierarchie));
+            foreach ($hierarchie[$categorie]['sous-categorie'] as $sousCat) {
+                $toutes = array_merge($toutes, trouverToutesLesCategories($sousCat, $hierarchie));
             }
         }
-        return $toutesLesSousCategories;
+        return $toutes;
     }
 
-    // Ici, vous utilisez la variable $sousCategories pour stocker les aliments à rechercher
-    $sousCategories = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie)); 
+    $ingredientsRecherches = array_unique(trouverToutesLesCategories($categorieActuelle, $Hierarchie)); 
 
-    // CORRECTION : On récupère l'ID de la recette ($recette_id) et on l'ajoute à la recette
-    foreach ($Recettes as $recette_id => $recette) { 
-        if (array_intersect($recette['index'], $sousCategories)) {
-            // CORRECTION : Ajout de l'ID à la recette pour que afficherCocktail puisse l'utiliser
-            $recette['id'] = $recette_id; 
+    // Recherche des cocktails
+    foreach ($Recettes as $id => $recette) { 
+        // On vérifie si la recette contient un des ingrédients
+        if (array_intersect($recette['index'], $ingredientsRecherches)) {
+            $recette['id_reel'] = $id; // On garde l'ID (0, 1, 2...)
             $cocktailsTrouves[] = $recette;
         }
     }
 
-    function afficherImage($recette){
-        $nomImage = str_replace(" ","_",$recette['titre']);
-        $nomImage .= '.jpg';
-        if(!(file_exists("Photos/".$nomImage))){
-          $nomImage = "default.jpg";
-        }
-        echo '<img src="Photos/'.$nomImage.'" width= "70px" height= "100px">'.'</br>';
-    }
-
-    function afficherCocktail($recette,$i) {
-
-        $buttonId = 'bouton'.$i;
-        $imageId = 'Coeur'.$i;
-        $imageCoeur = "Photos/Coeur_vide.png";
-        echo '<div style="border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; padding: 15px; width: 150px; height: 300px; align-items: center;">';
-        echo '<div style = "display: inline;">';
-        echo $recette['titre'];
-        //bouton coeur 
-        echo'<button id="'.$buttonId.'" onclick="ChangerCoeur(\''.$imageId.'\', \''.$recette['id'].'\', \''.$imageCoeur.'\')">';
-        echo'<img id="'.$imageId.'" src="'.$imageCoeur.'" width="50px" height="50px"/>';
-        echo'</button>';
-        echo '</div>'.'</br>';
-        afficherImage($recette);
-        
-        echo '<div style="font-size: 0.8em; margin-top: 10px; text-align: left; width: 100%; height: 100px; overflow: hidden;">';
-        foreach($recette['index'] as $ingredient){
-            echo '• ' . htmlspecialchars($ingredient) . '</br>';
-        }
-        echo '</div>';
-        
-        echo '</div>';
-    }
-
+    // Affichage
     if (count($cocktailsTrouves) > 0) {
         foreach ($cocktailsTrouves as $recette) {
-            afficherCocktail($recette,$i);
-            $i = $i + 1;
+            
+            // Gestion du Cœur (Vide ou Plein) selon la session PHP
+            $estFavori = in_array($recette['id_reel'], $_SESSION["user"]["recettesFavoris"]);
+            $imageCoeur = $estFavori ? "Photos/Coeur_plein.png" : "Photos/Coeur_vide.png";
+
+            echo '<div class="cocktail-card">';
+            echo '<strong>' . $recette['titre'] . '</strong> ';
+            
+            // LE LIEN MAGIQUE : On recharge la page en gardant la catégorie + action toggle
+            echo '<a href="nav.php?categorie=' . urlencode($categorieActuelle) . '&toggle_favori=' . $recette['id_reel'] . '">';
+            echo '<img src="'.$imageCoeur.'" width="20px" height="20px" style="vertical-align:middle;"/>';
+            echo '</a><br><br>';
+
+            // Image du cocktail
+            $nomImage = str_replace(" ","_",$recette['titre']) . '.jpg';
+            if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
+            echo '<img src="Photos/'.$nomImage.'" width="70" height="100"><br>';
+            
+            // Ingrédients
+            echo '<ul style="font-size:0.8em; padding-left:15px;">';
+            foreach($recette['index'] as $ing){
+                echo '<li>' . htmlspecialchars($ing) . '</li>';
+            }
+            echo '</ul>';
+            echo '</div>';
         }
     } else {
-        echo '<p>Aucun cocktail trouvé correspondant à la catégorie et ses sous-catégories.</p>';
+        echo '<p>Aucun cocktail trouvé.</p>';
     }
 ?>

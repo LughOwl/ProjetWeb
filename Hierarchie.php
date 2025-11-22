@@ -1,92 +1,52 @@
 <?php
-include 'Donnees.inc.php';
-
-// Récupérer la catégorie actuelle depuis les paramètres GET
-$categorieActuelle = isset($_GET['categorie']) ? $_GET['categorie'] : 'Aliment';
+// Pas besoin de include 'Donnees.inc.php' car nav.php l'a déjà fait
 
 // Fonction pour générer le fil d'Ariane
 function genererFilAriane($categorie, $hierarchie) {
     $filAriane = [];
+    $catTemp = $categorie;
     
-    // Remonter la hiérarchie jusqu'à la racine
-    while ($categorie && $categorie !== 'Aliment') {
-        array_unshift($filAriane, $categorie);
-        
-        // Trouver la super-catégorie
+    // Remonter la hiérarchie
+    while ($catTemp && $catTemp !== 'Aliment') {
+        array_unshift($filAriane, $catTemp);
         $trouvee = false;
         foreach ($hierarchie as $cat => $data) {
-            if (isset($data['sous-categorie']) && in_array($categorie, $data['sous-categorie'])) {
-                $categorie = $cat;
+            if (isset($data['sous-categorie']) && in_array($catTemp, $data['sous-categorie'])) {
+                $catTemp = $cat;
                 $trouvee = true;
                 break;
             }
         }
-        
-        if (!$trouvee) {
-            break;
-        }
+        if (!$trouvee) break;
     }
-    
-    // Ajouter la racine au début
     array_unshift($filAriane, 'Aliment');
     
-    // Générer le HTML du fil d'Ariane
+    // Génération HTML avec des liens PHP classiques
     $html = '';
-    
-    foreach ($filAriane as $index => $categorie) {
-        if ($index > 0) {
-            $html .= ' / ';
-        }
-        // Lien vers la catégorie avec appel JavaScript
-        $html .= '<a href="javascript:void(0)" onclick="chargerCategorie(\'' . addslashes($categorie) . '\')">';
-        $html .= htmlspecialchars($categorie);
+    foreach ($filAriane as $index => $cat) {
+        if ($index > 0) $html .= ' / ';
+        // LIEN STANDARD
+        $html .= '<a href="nav.php?categorie=' . urlencode($cat) . '">';
+        $html .= htmlspecialchars($cat);
         $html .= '</a>';
     }
     return $html;
 }
 
-// Fonction pour vérifier si une catégorie a des sous-catégories
-function aDesSousCategories($categorie, $hierarchie) {
-    if (!isset($hierarchie[$categorie])) {
-        return false;
-    }
-    
-    $data = $hierarchie[$categorie];
-    return isset($data['sous-categorie']) && !empty($data['sous-categorie']);
-}
+// Affichage
+echo '<strong>Aliment courant</strong>';
+echo '<p>' . genererFilAriane($categorieActuelle, $Hierarchie) . '</p>';
 
-// Fonction pour afficher la hiérarchie
-function afficherHierarchie($categorie, $hierarchie) {
-    if (!isset($hierarchie[$categorie])) {
-        return '';
+if (isset($Hierarchie[$categorieActuelle]['sous-categorie'])) {
+    echo 'Sous-catégories :<ul>';
+    foreach ($Hierarchie[$categorieActuelle]['sous-categorie'] as $sousCat) {
+        echo '<li>';
+        // LIEN STANDARD
+        echo '<a href="nav.php?categorie=' . urlencode($sousCat) . '">';
+        echo htmlspecialchars($sousCat);
+        echo '</a>';
+        echo '</li>';
     }
-    
-    $html = '';
-    $data = $hierarchie[$categorie];
-    
-    // Afficher les sous-catégories
-    if (isset($data['sous-categorie']) && !empty($data['sous-categorie'])) {
-        $html .= '<ul style="margin: 0;">';
-        
-        foreach ($data['sous-categorie'] as $sousCategorie) {
-            $html .= '<li>';
-            // Lien avec appel JavaScript
-            $html .= '<a href="javascript:void(0)" onclick="chargerCategorie(\'' . addslashes($sousCategorie) . '\')">';
-            $html .= htmlspecialchars($sousCategorie);
-            $html .= '</a>';
-            $html .= '</li>';
-        }
-        
-        $html .= '</ul>';
-    }
-    
-    return $html;
+    echo '</ul>';
 }
 ?>
-
-<strong>Aliment courant</strong>
-<p id="Fil-dAriane"><?php echo genererFilAriane($categorieActuelle, $Hierarchie); ?></p>
-<?php if (aDesSousCategories($categorieActuelle, $Hierarchie)): ?>
-    Sous-catégories :
-    <?php echo afficherHierarchie($categorieActuelle, $Hierarchie); ?>
-<?php endif; ?>
