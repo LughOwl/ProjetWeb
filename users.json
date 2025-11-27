@@ -1,0 +1,18 @@
+[
+    {
+        "login": "tom",
+        "password": "$2y$10$G0WiMCyy3FjQUfYhnKVwtesamwDKzWMUfFhfarLnbpvOswI5huTwq",
+        "nom": null,
+        "prenom": null,
+        "dateNaissance": null,
+        "sexe": "Non defini"
+    },
+    {
+        "login": "tom",
+        "password": "$2y$10$OG8EqiymnJKI2N7mmF4\/P.pHRdzm5J6g8BhY0cPeJAtcukMXO7Gk2",
+        "nom": null,
+        "prenom": null,
+        "dateNaissance": null,
+        "sexe": "Non defini"
+    }
+]
