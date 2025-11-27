@@ -1,18 +1,37 @@
 [
     {
-        "login": "tom",
-        "password": "$2y$10$G0WiMCyy3FjQUfYhnKVwtesamwDKzWMUfFhfarLnbpvOswI5huTwq",
-        "nom": null,
-        "prenom": null,
-        "dateNaissance": null,
-        "sexe": "Non defini"
+        "login": "hugo",
+        "password": "$2y$10$dHjkM7aXSczqZ\/alE8JgpuKa4tDFGJUiNIWiPIdOGQOKLK6Qpij\/m",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "",
+        "sexe": "Non defini",
+        "recettesFavoris": [
+            "0",
+            "3"
+        ]
     },
     {
         "login": "tom",
-        "password": "$2y$10$OG8EqiymnJKI2N7mmF4\/P.pHRdzm5J6g8BhY0cPeJAtcukMXO7Gk2",
-        "nom": null,
-        "prenom": null,
-        "dateNaissance": null,
-        "sexe": "Non defini"
+        "password": "$2y$10$vTFrwEAHfpJGTf2DXxYOKuUIMCzZfSKBAsCV8aFiLgsUDBeUEi6VG",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "",
+        "sexe": "Non defini",
+        "recettesFavoris": [
+            "1",
+            "2"
+        ]
+    },
+    {
+        "login": "caca",
+        "password": "$2y$10$BTkvDc7vLWZ5.lOkPU4hzO5hKlmrk\/MimZobr4P9EZBFi.Ef6sY.6",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "",
+        "sexe": "Non defini",
+        "recettesFavoris": [
+            "0"
+        ]
     }
 ]

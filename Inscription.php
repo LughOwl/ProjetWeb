@@ -31,6 +31,14 @@ function dateValide($date) {
     return $d <= $ageMin;
 }
 
+function estPresentLogin($users,$login){
+    foreach($users as $utilisateurs){
+       if($utilisateurs["login"] == $login){
+        return true;
+       }
+    }
+    return false;
+}
 $rapportErreur = "";
 
 /* --- TRAITEMENT --- */
@@ -126,28 +134,54 @@ function remplirSession() {
 </form>
 
 <?php
-if (isset($_POST["submit"])) {
-    remplirSession();
-    if ($rapportErreur === "") {
+    if (isset($_POST["submit"])) {
+        remplirSession();
         $users = chargerUtilisateurs();
-        $nouvelUtilisateur = [
-            "login" => $_SESSION["user"]["login"],
-            "password" => password_hash($_SESSION["user"]["password"], PASSWORD_DEFAULT),
-            "nom" => $_SESSION["user"]["nom"],
-            "prenom" => $_SESSION["user"]["prenom"],
-            "dateNaissance" => $_SESSION["user"]["dateNaissance"],
-            "sexe" => $_SESSION["user"]["sexe"]
-        ];
-
-        $users[] = $nouvelUtilisateur;
-        sauvegarderUtilisateurs($users);
-
-        // Ajout de la suppression des données de la session après succès (optionnel)
-        $login_msg = htmlspecialchars($_SESSION["user"]["login"]);
-        // unset($_SESSION["user"]); // Décommenter si vous voulez vider la session après succès
-       header("Location: index.php");
-    } else {
-        echo "<br><strong>Erreurs lors de l'inscription :</strong><br/>" . $rapportErreur;
+        if ($rapportErreur === "") {
+            if (estPresentLogin($users, $_POST["login"])) {
+            echo "login déjà présent";
+            }
+            else{
+                $nouvelUtilisateur = [
+                    "login" => $_SESSION["user"]["login"],
+                    "password" => password_hash($_SESSION["user"]["password"], PASSWORD_DEFAULT)
+                ];
+                if(isset($_SESSION["user"]["nom"])){
+                    $nouvelUtilisateur["nom"] = $_SESSION["user"]["nom"];
+                }
+                else{
+                    $nouvelUtilisateur["nom"] = "";
+                }
+                if(isset($_SESSION["user"]["prenom"])){
+                    $nouvelUtilisateur["prenom"] = $_SESSION["user"]["prenom"];
+                }
+                else{
+                    $nouvelUtilisateur["prenom"] = "";
+                }
+                if(isset($_SESSION["user"]["dateNaissance"])){
+                    $nouvelUtilisateur["dateNaissance"] = $_SESSION["user"]["dateNaissance"];
+                }
+                else{
+                    $nouvelUtilisateur["dateNaissance"] = "";
+                }
+                if(isset($_SESSION["user"]["sexe"])){
+                    $nouvelUtilisateur["sexe"] = $_SESSION["user"]["sexe"];
+                }
+                else{
+                    $nouvelUtilisateur["sexe"] = "";
+                }
+                if(isset($_SESSION["user"]["recettesFavoris"])){
+                    $nouvelUtilisateur["recettesFavoris"] = $_SESSION["user"]["recettesFavoris"];
+                }
+                else{
+                    $nouvelUtilisateur["recettesFavoris"] = "";
+                }
+                $users[] = $nouvelUtilisateur;
+                sauvegarderUtilisateurs($users);
+                header("Location: index.php");
+            }                 
+        }else {
+            echo "<br><strong>Erreurs lors de l'inscription :</strong><br/>" . $rapportErreur;
+        }
     }
-}
 ?>
