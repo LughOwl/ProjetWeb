@@ -1,0 +1,207 @@
+a { 
+    color: blue;
+}
+a:hover { 
+    color: darkblue; 
+}
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 10px;
+}
+
+/* Entête (nav) */
+nav {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    background: white;
+}
+.nav-bouton{
+    background: white;
+    border: 1px solid black;
+    padding: 5px 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-right: 5px;
+    color: black;
+}
+/* Zone de recherche */
+.zone-recherche {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-grow: 0; 
+    margin: auto;
+}
+.zone-recherche form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.recherche-label { 
+    font-weight: bold; 
+    margin-right: 5px;
+    white-space: nowrap;
+}
+.recherche-input {
+    width: 200px;
+    height: 28px;
+    font-size: 1em;
+}
+.recherche-bouton {
+    background: white;
+    border: 1px solid black;
+    cursor: pointer;
+    height: 33px;
+    width: 33px;
+}
+.recherche-bouton img {
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+}
+/* Zone de connexion */
+.zone-connexion {
+    background-color: #d3d3d3;
+    border: 1px solid black;
+    padding: 5px 5px;
+    text-align: right;
+    margin-left: 10px;
+}
+.zone-connexion form {
+    display: inline;
+}
+.zone-connexion a {
+    text-decoration: none;
+}
+.connexion-input {
+    padding: 2px 5px;
+    border: 1px solid black;
+    height: 23px;
+    width: 60px;
+}
+.connexion-label {
+    margin-left: 10px;
+}
+.connexion-bouton { 
+    background: white;
+    border: 1px solid black;
+    padding: 5px 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-right: 5px;
+    color: black;
+}
+
+
+/**/
+.structure { 
+    display: flex; gap: 10px; 
+}
+.sidebar { 
+    border: 1px solid black; 
+    padding: 10px; 
+    width: 200px; 
+}
+.content { 
+    border: 1px solid black; 
+    padding: 10px; 
+    width: 500px; 
+}
+
+.cocktail-card { 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    margin: 10px 0; 
+    padding: 15px; 
+}
+.erreur { 
+    color: red; 
+    font-weight: bold; 
+    margin-top: 10px; 
+}
+/**/
+
+/*
+.container {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+aside {
+    width: 250px;
+    border: 1px solid black;
+    padding: 15px;
+    background: white;
+    flex-shrink: 0;
+}
+
+aside h3 { margin-top: 0; border-bottom: none; font-size: 1.2em; }
+.cat-list ul { list-style-type: disc; padding-left: 20px; }
+.cat-list li { margin-bottom: 5px; }
+.breadcrumb { margin-bottom: 15px; font-size: 1em; }
+
+main {
+    flex-grow: 1;
+    border: 1px solid black;
+    padding: 15px;
+    background: white;
+}
+main h2 { margin-top: 0; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; }
+
+
+.cocktail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.cocktail-card {
+    border: 1px solid black;
+    background: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 1em;
+    text-align: left;
+    margin-right: 5px;
+}
+
+.heart-icon { width: 20px; height: 20px; }
+.card-img {
+    display: block;
+    margin: 0 auto 10px auto;
+    max-width: 100%;
+    height: 120px;
+    object-fit: contain;
+}
+
+.card-body { font-size: 0.9em; text-align: left; }
+.ing-list { list-style: none; padding: 0; margin: 0; }
+.ing-list li { margin-bottom: 2px; }
+
+
+.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { background: white; padding: 20px; border: 1px solid black; width: 300px; text-align: left; }
+.modal input, .modal select { border: 1px solid black; width: 100%; margin-bottom: 10px; padding: 5px; box-sizing: border-box; font-family: inherit; }
+.modal button { border: 1px solid black; background: #eee; padding: 5px 10px; cursor: pointer; width: 100%; font-family: inherit; }
+.modal label { display: block; margin-bottom: 5px; font-weight: bold; }
+.close-modal { float: right; cursor: pointer; font-weight: bold; font-size: 1.2em; }
+.error-msg { color: red; display: block; margin-bottom: 10px; text-align: center; }
+.success-msg { color: green; display: block; margin-bottom: 10px; text-align: center; }
+*/

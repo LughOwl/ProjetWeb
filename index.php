@@ -14,8 +14,19 @@
         file_put_contents("users.json", json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
     
+    function supprimerUtilisateur($login) {
+        $users = chargerUtilisateurs();
+        foreach ($users as $key => $user) {
+            if ($user['login'] === $login) {
+                unset($users[$key]);
+                break;
+            }
+        }
+        sauvegarderUtilisateurs(array_values($users));
+    }
+    
 
-    $listePages = ['navigation', 'favoris', 'inscription']; // Ajout de 'inscription'
+    $listePages = ['navigation', 'favoris', 'inscription', 'profil', 'recherche', 'recette'];
     
     // --- GESTION DE LA DÉCONNEXION ---
     if (isset($_POST['deconnexion'])) {
@@ -25,9 +36,9 @@
     }
 
    // --- GESTION DE LA CONNEXION ---
-    if (isset($_POST['login']) && isset($_POST['password'])) {
-        $login = trim($_POST['login']);
-        $password_soumis = $_POST['password']; // Mot de passe entré par l'utilisateur
+    if (isset($_POST['login-nav']) && isset($_POST['motDePasse-nav'])) {
+        $login = trim($_POST['login-nav']);
+        $password_soumis = $_POST['motDePasse-nav'];
 
         $utilisateurs = chargerUtilisateurs();
         $utilisateur_trouve = false;
@@ -40,8 +51,11 @@
                 if (password_verify($password_soumis, $user['password'])) { 
                     // Connexion réussie
                     $_SESSION["user"]["login"] = $user['login'];
-                    $_SESSION["user"]["recettesFavoris"] = isset($user['recettesFavoris']) ? $user['recettesFavoris'] : [];
-                    
+                    if (isset($user['recettesFavoris'])) {
+                        $_SESSION["user"]["recettesFavoris"] = $user['recettesFavoris'];
+                    } else {
+                        $_SESSION["user"]["recettesFavoris"] = [];
+                    }
                     header("Location: index.php");
                     exit();
                 }
@@ -111,48 +125,74 @@
 <head>
     <meta charset="UTF-8">
     <title>Cocktails</title>
-    <style>
-        a {color: blue; }
-        .layout { display: flex; gap: 10px; }
-        .sidebar { border: 1px solid black; padding: 10px; width: 200px; }
-        .content { border: 1px solid black; padding: 10px; width: 500px; }
-        .cocktail-card { border: 1px solid #ccc; border-radius: 5px; margin: 10px 0; padding: 15px; }
-        /* Style pour le message d'erreur */
-        .erreur { color: red; font-weight: bold; margin-top: 10px; } 
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav>
-        <a href="index.php?page=navigation&categorie=Aliment"><button type="button">Navigation</button></a>
-        <a href="index.php?page=favoris"><button type="button">Recette <img src="Photos/Coeur_plein.png" width="15px"/></button></a>
-        Recherche: 
-        <form style="display: inline;" action="" method="POST">
-            <input type="search" />
-            <button type="submit"><img src="Photos/Loupe.png" width="15px"/></button>
+        <a href="index.php?page=navigation&categorie=Aliment">
+            <button type="button" class="nav-bouton">
+                Navigation
+            </button>
+        </a>
+        <a href="index.php?page=favoris">
+            <button type="button" class="nav-bouton">
+                Recettes 
+                <img src="Photos/Coeur_plein.png" width="15px"/>
+            </button>
+        </a>
+
+        <div class="zone-recherche">
+            <form action="" method="POST">
+                <label class="recherche-label" for="recherche-input">
+                    Recherche :
+                </label>
+                <input type="recherche" id="recherche-input" class="recherche-input"/>
+                <button type="submit" class="recherche-bouton">
+                    <img src="Photos/Loupe.png"/>
+                </button>
+            </form>
+        </div>
         
-        </form>
         
-        <div style="display: inline; float: right; ">
+        <div class="zone-connexion">
             <?php  
             if (isset($_SESSION["user"]["login"])) {
-                echo "Bienvenue, " . htmlspecialchars($_SESSION["user"]["login"]);
-                ?><button>Profil</button>
-                <form method="post" style="display: inline;">
-                    <button type="submit" name="deconnexion">Se déconnecter</button>
+                echo htmlspecialchars($_SESSION["user"]["login"]);
+                ?>
+                <a href="index.php?page=profil">
+                    <button class="connexion-bouton">
+                        Profil
+                    </button>
+                </a>
+                <form method="post">
+                    <button type="submit" name="deconnexion" class="connexion-bouton">
+                        Se déconnecter
+                    </button>
                 </form>
             <?php
             } else {
                 ?> 
                 <form method="post" action="index.php" style = "display: inline;"> 
-                    <label for="login">Login</label>
-                    <input type="text" id="login" name="login" required />
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required />
-                    <button type="submit">Connexion</button>
+                    <label for="login-nav" class="connexion-label">
+                        Login
+                    </label>
+                    <input type="text" id="login-nav" name="login-nav" class="connexion-input" required />
+                    <label for="motDePasse-nav" class="connexion-label">
+                        Mot de passe
+                    </label>
+                    <input type="password" id="motDePasse-nav" name="motDePasse-nav" class="connexion-input" required />
+                    <!-- input ?? -->
+                    <button type="submit" class="connexion-bouton">
+                        Connexion
+                    </button>
                 </form>
-                <a href ="index.php?page=inscription"><button>S'inscrire</button></a>
+                <a href ="index.php?page=inscription">
+                    <button class="connexion-bouton">
+                        S'inscrire
+                    </button>
+                </a>
             <?php
-                } 
+            } 
             ?>
         </div>
     </nav>
@@ -163,46 +203,32 @@
         echo '<div class="erreur">' . $erreur_connexion . '</div>';
     }
     ?>
-
-    <div class="layout">
-        <aside class="sidebar">
-            <?php
-            switch ($pageCourante) {
-                case 'navigation':
-                    include 'Hierarchie.php';
-                    break;
-                case 'favoris':
-                    echo '<strong>Recettes favorites</strong><br>';
-                    break;
-                case 'inscription':
-                    echo '<strong>Inscription</strong><br>';
-                    break;
-                default:
-                    echo 'Page non trouvée.';
-                    break;
-            } 
-            ?>
-        </aside>
-    
-        <main class="content">
-            <?php
-            switch ($pageCourante) {
-                case 'navigation':
-                    include 'cocktails.php';
-                    break;
-                case 'favoris':
-                    include 'favoris.php';
-                    break;
-                case 'inscription':
-                    include 'Inscription.php';
-                    break;
-                default:
-                    echo 'Page non trouvée.';
-                    break;
-            }
-            ?>
-        </main>
+    <div class="structure">
+        <?php
+        switch ($pageCourante) {
+            case 'navigation':
+                include 'navigation.php';
+                break;
+            case 'favoris':
+                include 'favoris.php';
+                break;
+            case 'inscription':
+                include 'inscription.php';
+                break;
+            case 'profil':
+                include 'profil.php';
+                break;
+            case 'recherche':
+                include 'recherche.php';
+                break;
+            case 'recette':
+                include 'recette.php';
+                break;
+            default:
+                echo 'Page non trouvée.';
+                break;
+        }
+        ?>
     </div>
-    
 </body>
 </html>
