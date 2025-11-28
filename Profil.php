@@ -15,35 +15,35 @@
 
     $rapportErreur = "";
 
-    function remplirSession() {
+    function remplirSessionEtVerifications() {
         global $rapportErreur;
 
-        if (isset($_POST["nom-inscription"]) && $_POST["nom-inscription"] !== '') {
-            if (nomPrenomValide($_POST["nom-inscription"])) {
-                $_SESSION["user"]["nom"] = $_POST["nom-inscription"];
+        if (isset($_POST["nom-profil"]) && $_POST["nom-profil"] !== '') {
+            if (nomPrenomValide($_POST["nom-profil"])) {
+                $_SESSION["user"]["nom"] = $_POST["nom-profil"];
             } else {
                 $rapportErreur .= "Nom invalide.<br/>";
             }
         }
 
-        if (isset($_POST["prenom-inscription"]) && $_POST["prenom-inscription"] !== '') {
-            if (nomPrenomValide($_POST["prenom-inscription"])) {
-                $_SESSION["user"]["prenom"] = $_POST["prenom-inscription"];
+        if (isset($_POST["prenom-profil"]) && $_POST["prenom-profil"] !== '') {
+            if (nomPrenomValide($_POST["prenom-profil"])) {
+                $_SESSION["user"]["prenom"] = $_POST["prenom-profil"];
             } else {
                 $rapportErreur .= "Prénom invalide.<br/>";
             }
         }
 
-        if (isset($_POST["dateNaissance-inscription"]) && $_POST["dateNaissance-inscription"] !== '') {
-            if (dateValide($_POST["dateNaissance-inscription"])) {
-                $_SESSION["user"]["dateNaissance"] = $_POST["dateNaissance-inscription"];
+        if (isset($_POST["dateNaissance-profil"]) && $_POST["dateNaissance-profil"] !== '') {
+            if (dateValide($_POST["dateNaissance-profil"])) {
+                $_SESSION["user"]["dateNaissance"] = $_POST["dateNaissance-profil"];
             } else {
                 $rapportErreur .= "Date de naissance invalide ou moins de 18 ans.<br/>";
             }
         }
 
-        if (isset($_POST["sexe-inscription"])) {
-            $_SESSION["user"]["sexe"] = $_POST["sexe-inscription"];
+        if (isset($_POST["sexe-profil"])) {
+            $_SESSION["user"]["sexe"] = $_POST["sexe-profil"];
         }
     }
 ?>
@@ -137,48 +137,13 @@
     </form>
     <?php
         if (isset($_POST["submit-profil"])) {
-            remplirSession();
-            $users = chargerUtilisateurs();
+            remplirSessionEtVerifications();
             if ($rapportErreur === "") {
-                $utilisateur = [
-                    "login" => $_SESSION["user"]["login"],
-                    "password" => password_hash($_SESSION["user"]["password"], PASSWORD_DEFAULT)
-                ];
-                if(isset($_SESSION["user"]["nom"])){
-                    $utilisateur["nom"] = $_SESSION["user"]["nom"];
-                }
-                else{
-                    $utilisateur["nom"] = "";
-                }
-                if(isset($_SESSION["user"]["prenom"])){
-                    $utilisateur["prenom"] = $_SESSION["user"]["prenom"];
-                }
-                else{
-                    $utilisateur["prenom"] = "";
-                }
-                if(isset($_SESSION["user"]["dateNaissance"])){
-                    $utilisateur["dateNaissance"] = $_SESSION["user"]["dateNaissance"];
-                }
-                else{
-                    $utilisateur["dateNaissance"] = "";
-                }
-                if(isset($_SESSION["user"]["sexe"])){
-                    $utilisateur["sexe"] = $_SESSION["user"]["sexe"];
-                }
-                else{
-                    $utilisateur["sexe"] = "";
-                }
-                if(isset($_SESSION["user"]["recettesFavoris"])){
-                    $utilisateur["recettesFavoris"] = $_SESSION["user"]["recettesFavoris"];
-                }
-                else{
-                    $utilisateur["recettesFavoris"] = "";
-                }
-                supprimerUtilisateur($_SESSION["user"]["login"], $users);
-                $users[] = $utilisateur;
-                sauvegarderUtilisateurs($users);
-                header("Location: index.php?page=profil");                
-            }else {
+                $utilisateurs = chargerUtilisateurs();
+                modifierUtilisateur($_SESSION["user"]["login"], $utilisateurs);
+                sauvegarderUtilisateurs($utilisateurs); 
+                echo "<br><strong>Les enregistrements ont bien été pris en compte.</strong><br/>";              
+            } else {
                 echo "<br><strong>Erreurs lors de l'enregistrement des modifications :</strong><br/>" . $rapportErreur;
             }
         }

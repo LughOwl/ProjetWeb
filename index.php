@@ -10,21 +10,31 @@
         return json_decode($json, true);
     }
 
+    function recupererIdUtilisateur($login, $users) {
+        foreach ($users as $index => $user) {
+            if ($user['login'] === $login) {
+                return $index;
+            }
+        }
+        return -1;
+    }
+
     function sauvegarderUtilisateurs($users) {
         file_put_contents("users.json", json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
-    
-    function supprimerUtilisateur($login) {
-        $users = chargerUtilisateurs();
-        foreach ($users as $key => $user) {
+
+    function modifierUtilisateur($login, &$users) {
+        foreach ($users as &$user) {
             if ($user['login'] === $login) {
-                unset($users[$key]);
+                $user['nom'] = $_SESSION["user"]["nom"];
+                $user['prenom'] = $_SESSION["user"]["prenom"];
+                $user['dateNaissance'] = $_SESSION["user"]["dateNaissance"];
+                $user['sexe'] = $_SESSION["user"]["sexe"];
                 break;
             }
         }
-        sauvegarderUtilisateurs(array_values($users));
+        sauvegarderUtilisateurs($users);
     }
-    
 
     $listePages = ['navigation', 'favoris', 'inscription', 'profil', 'recherche', 'recette'];
     
@@ -35,34 +45,28 @@
         exit();
     }
 
-   // --- GESTION DE LA CONNEXION ---
-    if (isset($_POST['login-nav']) && isset($_POST['motDePasse-nav'])) {
+    // --- GESTION DE LA CONNEXION ---
+    if (!empty($_POST['login-nav']) && !empty($_POST['motDePasse-nav'])) {
         $login = trim($_POST['login-nav']);
         $password_soumis = $_POST['motDePasse-nav'];
 
         $utilisateurs = chargerUtilisateurs();
         $utilisateur_trouve = false;
 
-        foreach ($utilisateurs as $user) {
+        if(!empty($utilisateurs)){
+            foreach ($utilisateurs as $user) {
             // 1. On trouve l'utilisateur par le login
-            if ($user['login'] === $login) { 
-                // 2. On vérifie si le mot de passe soumis correspond au HACHAGE stocké
-                //    ATTENTION : $user['password'] DOIT contenir le hachage (ex: $2y$10$...)
-                if (password_verify($password_soumis, $user['password'])) { 
-                    // Connexion réussie
-                    $_SESSION["user"]["login"] = $user['login'];
-                    if (isset($user['recettesFavoris'])) {
-                        $_SESSION["user"]["recettesFavoris"] = $user['recettesFavoris'];
-                    } else {
-                        $_SESSION["user"]["recettesFavoris"] = [];
+                if ($user['login'] === $login) {
+                    if (password_verify($password_soumis, $user['password'])) { 
+                        // Connexion réussie
+                        $idUtilisateur = recupererIdUtilisateur($login, $utilisateurs);
+                        $_SESSION["user"] = $utilisateurs[$idUtilisateur];
+                        header("Location: index.php");
+                        exit();
                     }
-                    header("Location: index.php");
-                    exit();
                 }
             }
         }
-        
-        // Si la boucle se termine sans connexion réussie
         $erreur_connexion = "Identifiants incorrects.";
     }
 
@@ -142,11 +146,18 @@
         </a>
 
         <div class="zone-recherche">
-            <form action="" method="POST">
+            <form action="index.php?page=recherche" method="POST">
                 <label class="recherche-label" for="recherche-input">
                     Recherche :
                 </label>
-                <input type="recherche" id="recherche-input" class="recherche-input"/>
+                <input type="search" id="recherche-input" name="texteRecherche" class="recherche-input" 
+                value="<?php
+                    if (isset($_POST["texteRecherche"])) {
+                        echo htmlspecialchars($_POST["texteRecherche"]);
+                    } else {
+                        echo '';
+                    }
+                ?>"/>
                 <button type="submit" class="recherche-bouton">
                     <img src="Photos/Loupe.png"/>
                 </button>
@@ -181,7 +192,6 @@
                         Mot de passe
                     </label>
                     <input type="password" id="motDePasse-nav" name="motDePasse-nav" class="connexion-input" required />
-                    <!-- input ?? -->
                     <button type="submit" class="connexion-bouton">
                         Connexion
                     </button>

@@ -1,73 +1,14 @@
 [
     {
-        "login": "hugo",
-        "password": "$2y$10$dHjkM7aXSczqZ\/alE8JgpuKa4tDFGJUiNIWiPIdOGQOKLK6Qpij\/m",
-        "nom": "",
-        "prenom": "",
-        "dateNaissance": "",
-        "sexe": "Non defini",
+        "login": "a",
+        "password": "$2y$10$7tqq523W\/0nsZOPkyVXGqe1HHK6MlBesq\/AySySwtECvdq5T2Lj7S",
+        "nom": "acc",
+        "prenom": "b",
+        "dateNaissance": "2003-02-20",
+        "sexe": "Femme",
         "recettesFavoris": [
             "0",
-            "3"
+            "1"
         ]
-    },
-    {
-        "login": "tom",
-        "password": "$2y$10$vTFrwEAHfpJGTf2DXxYOKuUIMCzZfSKBAsCV8aFiLgsUDBeUEi6VG",
-        "nom": "",
-        "prenom": "",
-        "dateNaissance": "",
-        "sexe": "Non defini",
-        "recettesFavoris": [
-            "1",
-            "2"
-        ]
-    },
-    {
-        "login": "caca",
-        "password": "$2y$10$BTkvDc7vLWZ5.lOkPU4hzO5hKlmrk\/MimZobr4P9EZBFi.Ef6sY.6",
-        "nom": "",
-        "prenom": "",
-        "dateNaissance": "",
-        "sexe": "Non defini",
-        "recettesFavoris": [
-            "0"
-        ]
-    },
-    {
-        "login": "nico",
-        "password": "$2y$10$CcvvMXlzNCzUaAC0BPKQNOfEtfJkqSB5Vc15LNUf80dwIcj1ccuCC",
-        "nom": "",
-        "prenom": "",
-        "dateNaissance": "",
-        "sexe": "Non defini",
-        "recettesFavoris": []
-    },
-    {
-        "login": "n",
-        "password": "$2y$10$HYXO\/tYVjLgEVaqMIx7q3OH9bZyG0F7h15YsH1aXxk1azo6RyDJOS",
-        "nom": "",
-        "prenom": "",
-        "dateNaissance": "",
-        "sexe": "Non defini",
-        "recettesFavoris": []
-    },
-    {
-        "login": "bbb",
-        "password": "$2y$10$HzPftI2CALl.o6WVLiypdezKDGXSf1bZxqESHg33wZVLKnUz1BHZm",
-        "nom": "bbb",
-        "prenom": "bbb",
-        "dateNaissance": "",
-        "sexe": "Non defini",
-        "recettesFavoris": []
-    },
-    {
-        "login": "a",
-        "password": "$2y$10$y9fYBd8EN5D.ZHCtwabvj.Kq8FxVitlh4PjmpvvNfRfSj.LrcKMMO",
-        "nom": "a",
-        "prenom": "a",
-        "dateNaissance": "2000-02-22",
-        "sexe": "Femme",
-        "recettesFavoris": []
     }
 ]
