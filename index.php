@@ -44,7 +44,10 @@
         header("Location: index.php");
         exit();
     }
-
+    if(isset($_GET['submit-recherche'])){
+        header("Location: index.php?page=recherche&texteRecherche=".$_GET['texteRecherche']);
+        exit();
+    }
     // --- GESTION DE LA CONNEXION ---
     if (!empty($_POST['login-nav']) && !empty($_POST['motDePasse-nav'])) {
         $login = trim($_POST['login-nav']);
@@ -111,11 +114,14 @@
                 }
             }
         }
-
         $urlRedirection = "index.php?page=" . $pageCourante;
         if ($pageCourante === 'navigation') {
             $ancre ="#recette-" . $idRecette;
             $urlRedirection .= "&categorie=" . urlencode($categorieActuelle). $ancre;
+        }
+        if($pageCourante === 'recherche'){
+            $ancre="#recette-" . $idRecette;
+            $urlRedirection .= "&texteRecherche=" . urlencode($_GET['texteRecherche']). $ancre;
         }
 
         header("Location: " . $urlRedirection);
@@ -146,19 +152,19 @@
         </a>
 
         <div class="zone-recherche">
-            <form action="index.php?page=recherche" method="POST">
+            <form action="index.php?page=recherche" method="GET">
                 <label class="recherche-label" for="recherche-input">
                     Recherche :
                 </label>
                 <input type="search" id="recherche-input" name="texteRecherche" class="recherche-input" 
                 value="<?php
-                    if (isset($_POST["texteRecherche"])) {
-                        echo htmlspecialchars($_POST["texteRecherche"]);
+                    if (isset($_GET["texteRecherche"])) {
+                        echo htmlspecialchars($_GET["texteRecherche"]);
                     } else {
                         echo '';
                     }
                 ?>"/>
-                <button type="submit" class="recherche-bouton">
+                <button type="submit" name="submit-recherche" class="recherche-bouton">
                     <img src="Photos/Loupe.png"/>
                 </button>
             </form>

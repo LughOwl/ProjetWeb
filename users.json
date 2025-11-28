@@ -10,5 +10,19 @@
             "0",
             "1"
         ]
+    },
+    {
+        "login": "hugoat",
+        "password": "$2y$10$1xYehekAeYbCA2Y59ofVwOlfHXnL6XTpuo0l9oTeLpdHBXHBNnMui",
+        "nom": "hugo",
+        "prenom": "b",
+        "dateNaissance": "2003-07-18",
+        "sexe": "Homme",
+        "recettesFavoris": [
+            "27",
+            "12",
+            "1",
+            "78"
+        ]
     }
 ]
