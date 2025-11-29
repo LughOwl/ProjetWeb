@@ -16,7 +16,7 @@ if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
             <div class="recette-header">
                 <div class="titre-page"><?php echo htmlspecialchars($cocktail['titre']); ?></div>
                 <a href="index.php?page=recette&id=<?php echo $id; ?>&est_favori=<?php echo $id; ?>">
-                    <img src="<?php echo $imageCoeur; ?>" class="image-coeur"/>
+                    <img src="<?php echo $imageCoeur; ?>" class="image-coeur" alt="image coeur">
                 </a>
             </div>
             
@@ -27,7 +27,7 @@ if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
                     if (!file_exists("Photos/" . $nomImage)) {
                         $nomImage = "default.jpg";
                     }
-                    ?><img src="Photos/<?php echo $nomImage; ?>">
+                    ?><img src="Photos/<?php echo $nomImage; ?>" alt="image cocktail">
                 </div>
                 
                 <div class="recette-ingredients">
