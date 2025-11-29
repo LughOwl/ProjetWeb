@@ -2,15 +2,11 @@
     {
         "login": "a",
         "password": "$2y$10$7tqq523W\/0nsZOPkyVXGqe1HHK6MlBesq\/AySySwtECvdq5T2Lj7S",
-        "nom": "acc",
+        "nom": "aacc",
         "prenom": "b",
-        "dateNaissance": "2003-02-20",
-        "sexe": "Femme",
-        "recettesFavoris": [
-            "0",
-            "1",
-            "47"
-        ]
+        "dateNaissance": "2003-02-07",
+        "sexe": "Homme",
+        "recettesFavoris": []
     },
     {
         "login": "hugoat",
@@ -42,6 +38,24 @@
         "prenom": "a",
         "dateNaissance": "",
         "sexe": "Non defini",
+        "recettesFavoris": []
+    },
+    {
+        "login": "b",
+        "password": "$2y$10$2bQFMPElk0N6vcssDZOk3.lhcL4eWDENN7BZCJiESVnw1fLa8GHae",
+        "nom": "b",
+        "prenom": "b",
+        "dateNaissance": "",
+        "sexe": "Homme",
+        "recettesFavoris": []
+    },
+    {
+        "login": "aa",
+        "password": "$2y$10$e\/R8IHFjHQJ4mOjiG7VXO.vkBcsQupZRz08iU8rjJCJeb4w1Zir.2",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "",
+        "sexe": "Homme",
         "recettesFavoris": []
     }
 ]

@@ -36,8 +36,6 @@ function modifierUtilisateur($login, &$users) {
     sauvegarderUtilisateurs($users);
 }
 
-$listePages = ['navigation', 'favoris', 'inscription', 'profil', 'recherche', 'recette'];
-
 if (isset($_POST['deconnexion'])) {
     session_destroy();
     header("Location: index.php");
@@ -71,6 +69,8 @@ if (!empty($_POST['login-nav']) && !empty($_POST['motDePasse-nav'])) {
     $erreur_connexion = "Identifiants incorrects.";
 }
 
+$listePages = ['navigation', 'favoris', 'inscription', 'profil', 'recherche', 'recette'];
+
 if (isset($_GET['page']) && in_array($_GET['page'], $listePages)) {
     $pageCourante = $_GET['page'];
 } else {
@@ -85,6 +85,12 @@ if (!isset($_GET['categorie'])) {
     $categorieActuelle = 'Aliment';
 } else {
     $categorieActuelle = $_GET['categorie'];
+}
+
+if (!isset($_GET['parent'])) {
+    $parent = '';
+} else {
+    $parent = $_GET['parent'];
 }
 
 if (isset($_GET['est_favori'])) {
@@ -114,7 +120,7 @@ if (isset($_GET['est_favori'])) {
     $urlRedirection = "index.php?page=" . $pageCourante;
     if ($pageCourante === 'navigation') {
         $ancre = "#recette-" . $idRecette;
-        $urlRedirection .= "&categorie=" . urlencode($categorieActuelle) . $ancre;
+        $urlRedirection .= "&categorie=" . urlencode($categorieActuelle) . "&parent=" . urlencode($parent) . $ancre;
     }
     if ($pageCourante === 'recherche') {
         $ancre = "#recette-" . $idRecette;
@@ -128,7 +134,6 @@ if (isset($_GET['est_favori'])) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -139,17 +144,16 @@ if (isset($_GET['est_favori'])) {
 <body>
     <nav>
         <a href="index.php?page=navigation&categorie=Aliment">
-            <button type="button" class="nav-bouton">
+            <div class="nav-bouton">
                 Navigation
-            </button>
+            </div>
         </a>
         <a href="index.php?page=favoris">
-            <button type="button" class="nav-bouton">
+            <div class="nav-bouton">
                 Recettes 
-                <img src="Photos/Coeur_plein.png" width="15px"/>
-            </button>
+                <img src="Photos/Coeur_plein.png" width="15" alt="image coeur">
+            </div>
         </a>
-
         <div class="zone-recherche">
             <form action="index.php?page=recherche" method="GET">
                 <label class="recherche-label" for="recherche-input">
@@ -161,42 +165,41 @@ if (isset($_GET['est_favori'])) {
                         } else {
                             echo '';
                         }
-                    ?>"/>
+                    ?>">
                 <button type="submit" name="submit-recherche" class="recherche-bouton">
-                    <img src="Photos/Loupe.png"/>
+                    <img src="Photos/Loupe.png" alt="image loupe">
                 </button>
             </form>
         </div>
-        
         <div class="zone-connexion">
             <?php if (isset($_SESSION["user"]["login"])){ ?><div class="texte-login"><?php echo htmlspecialchars($_SESSION["user"]["login"]); ?></div>
             <a href="index.php?page=profil">
-                <button class="connexion-bouton">
+                <div class="connexion-bouton">
                     Profil
-                </button>
+            </div>
             </a>
             <form method="post">
                 <button type="submit" name="deconnexion" class="connexion-bouton">
                     Se déconnecter
                 </button>
             </form>
-            <?php } else { ?><form method="post" action="index.php" style="display: inline;"> 
+        <?php } else { ?><form method="post" action="index.php" style="display: inline;"> 
                 <label for="login-nav" class="connexion-label">
                     Login
                 </label>
-                <input type="text" id="login-nav" name="login-nav" class="connexion-input" required />
+                <input type="text" id="login-nav" name="login-nav" class="connexion-input" required >
                 <label for="motDePasse-nav" class="connexion-label">
                     Mot de passe
                 </label>
-                <input type="password" id="motDePasse-nav" name="motDePasse-nav" class="connexion-input" required />
+                <input type="password" id="motDePasse-nav" name="motDePasse-nav" class="connexion-input" required >
                 <button type="submit" class="connexion-bouton">
                     Connexion
                 </button>
             </form>
             <a href="index.php?page=inscription">
-                <button class="connexion-bouton">
+                <div class="connexion-bouton">
                     S'inscrire
-                </button>
+                </div>
             </a>
         <?php } ?></div>
     </nav>

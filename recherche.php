@@ -1,40 +1,37 @@
 <?php
-    function afficherListes($elementsVoulus,$elementsNonVoulus,$elementsInconnus){
-        if(!empty($elementsVoulus)){
-            ?><div>Liste des aliments souhaités :&nbsp;
-            <?php
-            foreach($elementsVoulus as $ingredient){
-                if(end($elementsVoulus) == $ingredient){
-                    echo $ingredient.'</div>';
-                }
-                else{
-                    echo $ingredient.', ';
+    function afficherListes($elementsVoulus, $elementsNonVoulus, $elementsInconnus) {
+        if (!empty($elementsVoulus)) {
+            echo "                <div>Liste des aliments souhaités :&nbsp;";
+            $last = end($elementsVoulus);
+            foreach ($elementsVoulus as $ingredient) {
+                echo htmlspecialchars($ingredient);
+                if ($ingredient !== $last) {
+                    echo ', ';
                 }
             }
+            echo "</div>\n";
         }
-        if(!empty($elementsNonVoulus)){
-            ?><div>Liste des aliments non souhaités :&nbsp;      
-            <?php
-            foreach($elementsNonVoulus as $ingredient){
-                if(end($elementsNonVoulus) == $ingredient){
-                    echo $ingredient.'</div>';
-                }
-                else{
-                    echo $ingredient.', ';
+        if (!empty($elementsNonVoulus)) {
+            echo "                <div>Liste des aliments non souhaités :&nbsp;";
+            $last = end($elementsNonVoulus);
+            foreach ($elementsNonVoulus as $ingredient) {
+                echo htmlspecialchars($ingredient);
+                if ($ingredient !== $last) {
+                    echo ', ';
                 }
             }
+            echo "</div>\n";
         }
-        if(!empty($elementsInconnus)){
-            ?><div>Éléments non reconnus dans la requête :&nbsp;
-            <?php
-            foreach($elementsInconnus as $ingredient){
-                if(end($elementsInconnus) == $ingredient){
-                    echo $ingredient.'</div>';
-                }
-                else{
-                    echo $ingredient.', ';
+        if (!empty($elementsInconnus)) {
+            echo "                <div>Éléments non reconnus dans la requête :&nbsp;";
+            $last = end($elementsInconnus);
+            foreach ($elementsInconnus as $ingredient) {
+                echo htmlspecialchars($ingredient);
+                if ($ingredient !== $last) {
+                    echo ', ';
                 }
             }
+            echo "</div>\n";
         }
     }
 
@@ -48,27 +45,91 @@
         return $toutes;
     }
 
-    function afficherCocktails($elementsVoulus,$elementsNonVoulus){
+    function CalculerIndiceSatisfaction($elementsVoulus, $cocktail) {
+        $indiceSatisfaction = 0 ;
+        foreach($elementsVoulus as $elementVoulu){
+            foreach($cocktail['index'] as $ingredient){
+                if($ingredient == $elementVoulu){
+                    $indiceSatisfaction++;
+                }
+            }
+        }
+        $countVoulus = count($elementsVoulus);
+        if ($countVoulus > 0) {
+            $indiceSatisfaction /= $countVoulus;
+        } else {
+            return 0;
+        }
+        return $indiceSatisfaction * 100;
+    }
+
+    $tousLesIngredients = '';
+    if(empty($tousLesIngredients)) $tousLesIngredients = array_unique(trouverToutesLesCategories("Aliment", $Hierarchie));
+    
+    function estUnIngredientValide($ingredient) {
+        global $tousLesIngredients;
+        return in_array($ingredient, $tousLesIngredients);
+    }
+
+    function remplirTableauxIngredients(&$elementsVoulus, &$elementsNonVoulus, &$elementsInconnus, $texteRecherche) {
+        preg_match_all('/("[^"]+"|\S+)/', $texteRecherche, $matches);
+        $termes = $matches[0];
+
+        $termes_sans_guillemets = array_map(function($termes) {
+            return trim($termes, '"');
+        }, $termes);
+
+        foreach ($termes_sans_guillemets as $terme) {
+            if (strpos($terme, '-') === 0) {
+                $elementNonVoulu = substr($terme, 1);
+                if (estUnIngredientValide($elementNonVoulu)) {
+                    $elementsNonVoulus[] = $elementNonVoulu;
+                } else {
+                    $elementsInconnus[] = $elementNonVoulu ;
+                }
+            } else {
+                if (strpos($terme, '+') === 0) {
+                    $elementVoulu = substr($terme, 1);
+                    if (estUnIngredientValide($elementVoulu)) {
+                        $elementsVoulus[] = $elementVoulu;
+                    } else {
+                        $elementsInconnus[] = $elementVoulu ;
+                    }
+                } else {
+                    if (estUnIngredientValide($terme)) {
+                        $elementsVoulus[] = $terme;
+                    } else {
+                        $elementsInconnus[] = $terme;
+                    }
+                }
+            }
+        }
+    }
+    
+    function afficherCocktails($elementsVoulus, $elementsNonVoulus) {
         global $Recettes;
         global $Hierarchie;
         global $texteRecherche;
+        
         $elementsVoulusAvecSousCategorie = [];
         $elementsNonVoulusAvecSousCategorie = [];
+        
         foreach($elementsVoulus as $elementVoulu){
-            $elementsVoulusAvecSousCategorie= array_merge($elementsVoulusAvecSousCategorie,trouverToutesLesCategories($elementVoulu,$Hierarchie));
+            $elementsVoulusAvecSousCategorie = array_merge($elementsVoulusAvecSousCategorie, trouverToutesLesCategories($elementVoulu, $Hierarchie));
         }
         $elementsVoulusAvecSousCategorie = array_unique($elementsVoulusAvecSousCategorie);
         
         foreach($elementsNonVoulus as $elementNonVoulu){
-            $elementsNonVoulusAvecSousCategorie = array_merge($elementsNonVoulusAvecSousCategorie,trouverToutesLesCategories($elementNonVoulu,$Hierarchie));
+            $elementsNonVoulusAvecSousCategorie = array_merge($elementsNonVoulusAvecSousCategorie, trouverToutesLesCategories($elementNonVoulu, $Hierarchie));
         }
 
         $elementsNonVoulusAvecSousCategorie = array_unique($elementsNonVoulusAvecSousCategorie);
         $cocktailsTrouves = [];
+        
         foreach ($Recettes as $id => $recette) { 
-            if (array_intersect($recette['index'], $elementsVoulusAvecSousCategorie) && !array_intersect($recette['index'],$elementsNonVoulusAvecSousCategorie)){
+            if (array_intersect($recette['index'], $elementsVoulusAvecSousCategorie) && !array_intersect($recette['index'], $elementsNonVoulusAvecSousCategorie)){
                 $recette['id'] = $id;
-                $recette['indiceSatisfaction'] = CalculerIndiceSatisfaction($elementsVoulusAvecSousCategorie,$recette);
+                $recette['indiceSatisfaction'] = CalculerIndiceSatisfaction($elementsVoulusAvecSousCategorie, $recette);
                 $cocktailsTrouves[] = $recette;
             }
         }
@@ -85,136 +146,96 @@
                 $cocktailsTries[] = $cocktailsTrouves[$key];
             }
             $cocktailsTrouves = $cocktailsTries;
+            
             foreach ($cocktailsTrouves as $cocktail) {
                 
-                if(in_array($cocktail['id'], $_SESSION["user"]["recettesFavoris"])){
+                $imageCoeur = "Photos/Coeur_vide.png";
+                if(isset($_SESSION["user"]["recettesFavoris"]) && in_array($cocktail['id'], $_SESSION["user"]["recettesFavoris"])){
                     $imageCoeur = "Photos/Coeur_plein.png";
-                } else {
-                    $imageCoeur = "Photos/Coeur_vide.png";
-                }
+                } 
 
                 $id_html = 'recette-' . $cocktail['id'];
-
-                echo '<div class="carte-cocktail" id="' . $id_html . '">';
-                    echo '<div class="carte-header">';
-                        echo '<a href="index.php?page=recette&id=' . $cocktail['id'] . '" class="zone-cliquable">';
-                            echo '<div class="carte-titre">' . $cocktail['titre'] . '</div>';
-                        echo '</a>';
-                        echo '<a href="index.php?page=recherche&texteRecherche='.$texteRecherche.'&est_favori=' . $cocktail['id'] . '">';
-                            echo '<img src="'.$imageCoeur.'" class="image-coeur"/>';
-                        echo '</a>';
-                    echo '</div>';
-
-                    echo '<a href="index.php?page=recette&id=' . $cocktail['id'] . '" class="zone-cliquable">';
-                        $nomImage = str_replace(" ","_",$cocktail['titre']) . '.jpg';
-                        if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
-                        echo '<img src="Photos/'.$nomImage.'" class="image-cocktail">';
-                        
-                        echo '<ul class="liste-ingredients">';
+                
+                $nomImage = str_replace(" ","_",$cocktail['titre']) . '.jpg';
+                if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
+                
+                $satisfaction = round($cocktail['indiceSatisfaction'], 2);
+?>
+                <div class="carte-cocktail" id="<?php echo $id_html; ?>">
+                    <div class="carte-header">
+                        <a href="index.php?page=recette&id=<?php echo $cocktail['id']; ?>" class="zone-cliquable">
+                            <div class="carte-titre"><?php echo $cocktail['titre']; ?></div>
+                        </a>
+                        <a href="index.php?page=recherche&texteRecherche=<?php echo urlencode($texteRecherche); ?>&est_favori=<?php echo $cocktail['id']; ?>">
+                            <img src="<?php echo $imageCoeur; ?>" class="image-coeur" alt="image coeur">
+                        </a>
+                    </div>
+                    <a href="index.php?page=recette&id=<?php echo $cocktail['id']; ?>" class="zone-cliquable">
+                        <img src="Photos/<?php echo $nomImage; ?>" class="image-cocktail" alt="image cocktail">
+                        <ul class="liste-ingredients">
+<?php
                         foreach($cocktail['index'] as $ing){
-                            echo '<li>' . htmlspecialchars($ing) . '</li>';
+?>
+                            <li><?php echo htmlspecialchars($ing); ?></li>
+<?php
                         }
-                        echo '</ul>';
-                        echo '<div class="satisfaction">Satisfaction : '.round($cocktail['indiceSatisfaction'],2).'%.</div>';
-                    echo '</a>';
-                echo '</div>';
-            }
+?>
+                        </ul>
+                        <div class="satisfaction">Satisfaction : <?php echo $satisfaction; ?>%</div>
+                    </a>
+                </div>
+<?php
+            } // Fin foreach cocktails
         } else {
-            echo '<p>Aucun cocktail trouvé.</p>';
-        }
+?>
+                <div>Aucun cocktail trouvé.</div>
+<?php
+        } // Fin if count($cocktailsTrouves)
     }
 
-    function estUnIngredientValide($ingredient){
-        global $Hierarchie;
-        $tousLesIngredient = array_unique(trouverToutesLesCategories("Aliment", $Hierarchie));
-        foreach($tousLesIngredient as $ingredientValide){
-            if($ingredient == $ingredientValide){
-                return true;
-            }
-        }
-        return false;
-    }
+    // Initialisation
+    $texteRecherche = isset($_GET['texteRecherche']) ? $_GET['texteRecherche'] : "";
+    $messageErreur = "";
+    $elementsNonVoulus = [];
+    $elementsVoulus = [];
+    $elementsInconnus = [];
+    $afficherResultats = false;
 
-    function remplirTableauxIngredients(&$elementsVoulus,&$elementsNonVoulus,&$elementsInconnus,$texteRecherche){
-        preg_match_all('/("[^"]+"|\S+)/', $texteRecherche, $matches);
-        $termes = $matches[0];
-
-        $termes_sans_guillemets = array_map(function($termes) {
-            return trim($termes, '"');
-        }, $termes);
-
-        foreach ($termes_sans_guillemets as $terme) {
-            if (strpos($terme, '-') === 0) {
-                $elementNonVoulu = substr($terme,1);
-                if(estUnIngredientValide($elementNonVoulu)){
-                    $elementsNonVoulus[] = $elementNonVoulu;
-                }
-                else{
-                    $elementsInconnus[] = $elementNonVoulu ;
-                }
-            } else {
-                if (strpos($terme, '+') === 0) {
-                    $elementVoulu = substr($terme,1);
-                    if(estUnIngredientValide($elementVoulu)){
-                        $elementsVoulus[] = $elementVoulu;
-                    }
-                    else{
-                        $elementsInconnus[] = $elementVoulu ;
-                    }
-                } else {
-                    if(estUnIngredientValide($terme)){
-                        $elementsVoulus[] = $terme;
-                    }
-                    else{
-                        $elementsInconnus[] = $terme;
-                    }
-                }
-            }
+    // Vérification de la syntaxe
+    if (substr_count($texteRecherche, '"') % 2 == 1) {
+        $messageErreur = 'Problème de syntaxe dans votre requête : nombre impair de double-quotes';
+    } else {
+        // Remplissage des tableaux
+        remplirTableauxIngredients($elementsVoulus, $elementsNonVoulus, $elementsInconnus, $texteRecherche);
+        
+        // Vérification de l'existence des éléments
+        if (empty($elementsNonVoulus) && empty($elementsVoulus)) {
+            $messageErreur = 'Problème dans votre requête : recherche impossible';
+        } else {
+            $afficherResultats = true;
         }
     }
-
-    function CalculerIndiceSatisfaction($elementsVoulus,$cocktail){
-        $indiceSatisfaction = 0 ;
-        foreach($elementsVoulus as $elementVoulu){
-            foreach($cocktail['index'] as $ingredient){
-                if($ingredient == $elementVoulu){
-                    $indiceSatisfaction++;
-                }
-            }
-        }
-        $indiceSatisfaction /= count($elementsVoulus);
-        return $indiceSatisfaction * 100;
-    }
-
 ?>
 <main>
-    <?php
-        if(isset($_GET['texteRecherche'])){
-            $texteRecherche = $_GET['texteRecherche'];
-        }
-        else{
-            $texteRecherche ="";
-        }
-
-        if(substr_count($texteRecherche,'"') % 2 == 1){
-            echo '<div>Problème de syntaxe dans votre requête : nombre impair de double-quotes</div>';
-        }
-        else{
-            $elementsNonVoulus = [];
-            $elementsVoulus = [];
-            $elementsInconnus = [];
-            remplirTableauxIngredients($elementsVoulus,$elementsNonVoulus,$elementsInconnus,$texteRecherche);
-            if(empty($elementsNonVoulus) && empty($elementsVoulus)){
-                echo '<div>Problème dans votre requête : recherche impossible</div>';
-            }   
-            else{
-                echo '<div>';
-                    afficherListes($elementsVoulus,$elementsNonVoulus,$elementsInconnus);
-                echo '</div>';
-                echo '<div class="affichage-cocktails">';
-                    afficherCocktails($elementsVoulus,$elementsNonVoulus);
-                echo '</div>';
-            }
-        }
-    ?>
-</main>
+<?php 
+    if ($messageErreur !== "") { 
+?>
+            <div><?php echo $messageErreur; ?></div>
+<?php 
+    } 
+?>
+<?php 
+    // Affichage des résultats si la recherche est valide
+    if ($afficherResultats) { 
+?>
+            <div>
+<?php afficherListes($elementsVoulus, $elementsNonVoulus, $elementsInconnus); ?>
+            </div>
+            
+            <div class="affichage-cocktails">
+<?php afficherCocktails($elementsVoulus, $elementsNonVoulus); ?>
+            </div>
+<?php 
+    } 
+?>
+        </main>
