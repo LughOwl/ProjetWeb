@@ -46,12 +46,30 @@
             $_SESSION["user"]["sexe"] = $_POST["sexe-profil"];
         }
     }
+    function verificationFormulaire(){
+        global $rapportErreur;
+        if (isset($_POST["submit-profil"])) {
+            remplirSessionEtVerifications();
+            if ($rapportErreur === "") {
+                $utilisateurs = chargerUtilisateurs();
+                modifierUtilisateur($_SESSION["user"]["login"], $utilisateurs);
+                sauvegarderUtilisateurs($utilisateurs); 
+                echo '<div class="enregistrement">Les enregistrements ont bien été pris en compte.</div>';              
+            } else {
+                echo '<div class="erreur">Erreurs lors de l\'enregistrement des modifications :<br/>'.$rapportErreur.'</div>';
+            }
+        }
+    }
 ?>
-<main class="profil-form">
+<main class="style-formulaire">
     <form method="post" action="#">
-        <h2>Profil</h2>
+        <div class="titre-page">Profil</div>
 
-        <label for="login">Login:</label>
+        <?php
+            verificationFormulaire();
+        ?>
+
+        <label for="login">Login (non modifiable):</label>
         <input type="text" id="login" name="login" disabled
             value="<?php 
                 if (isset($_SESSION["user"]["login"])) {
@@ -60,9 +78,7 @@
                     echo '';
                 }            
             ?>"
-        /><br/>
-
-        <label for="password">Password : non-modifiable</label><br/>
+        />
 
         <label for="nom-profil">Nom:</label>
         <input type="text" id="nom-profil" name="nom-profil" 
@@ -75,7 +91,7 @@
                     echo '';
                 }
             ?>"
-        /><br/>
+        />
 
         <label for="prenom-profil">Prenom:</label>
         <input type="text" id="prenom-profil" name="prenom-profil" 
@@ -88,7 +104,7 @@
                     echo '';
                 }
             ?>"
-        /><br/>
+        />
 
         <label for="dateNaissance-profil">Date de Naissance:</label>
         <input type="date" id="dateNaissance-profil" name="dateNaissance-profil"
@@ -101,7 +117,7 @@
                     echo '';
                 }
             ?>"
-        /><br/>
+        />
 
         <label for="sexe-profil">Sexe:</label>
         <select id="sexe-profil" name="sexe-profil">
@@ -131,21 +147,8 @@
                     echo 'selected';
                 }
             ?>>Femme</option>
-        </select><br/>
+        </select>
 
-        <input type="submit" name="submit-profil" value="Enregistrer les modifications"/>
+        <input type="submit" name="submit-profil" value="Enregistrer les modifications" class="bouton-submit"/>
     </form>
-    <?php
-        if (isset($_POST["submit-profil"])) {
-            remplirSessionEtVerifications();
-            if ($rapportErreur === "") {
-                $utilisateurs = chargerUtilisateurs();
-                modifierUtilisateur($_SESSION["user"]["login"], $utilisateurs);
-                sauvegarderUtilisateurs($utilisateurs); 
-                echo "<br><strong>Les enregistrements ont bien été pris en compte.</strong><br/>";              
-            } else {
-                echo "<br><strong>Erreurs lors de l'enregistrement des modifications :</strong><br/>" . $rapportErreur;
-            }
-        }
-    ?>
 </main>

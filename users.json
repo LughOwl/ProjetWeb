@@ -8,7 +8,8 @@
         "sexe": "Femme",
         "recettesFavoris": [
             "0",
-            "1"
+            "1",
+            "47"
         ]
     },
     {
@@ -24,5 +25,23 @@
             "1",
             "78"
         ]
+    },
+    {
+        "login": "c",
+        "password": "$2y$10$WodUhrNz6F\/LacdeqUV0reH.Cull3KWZpr1KLrV70WeiE0SLZvwDC",
+        "nom": "c",
+        "prenom": "c",
+        "dateNaissance": "",
+        "sexe": "Homme",
+        "recettesFavoris": []
+    },
+    {
+        "login": "nico",
+        "password": "$2y$10$ZKXc6rtYxKTS83Bj\/18aKeBHlm2W.cJxSt3QpMmkH77RRfT9qplEG",
+        "nom": "a",
+        "prenom": "a",
+        "dateNaissance": "",
+        "sexe": "Non defini",
+        "recettesFavoris": []
     }
 ]

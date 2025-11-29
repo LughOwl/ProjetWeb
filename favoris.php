@@ -1,42 +1,48 @@
-<main class="affichage-cocktails">
-    <strong>Liste des cocktails favoris</strong>
-    <?php
+<main>
+    <div class="titre-page">Liste des cocktails favoris</div>
+    <div class="affichage-cocktails">
+        <?php
+            $indicesCocktailsFavoris = $_SESSION["user"]["recettesFavoris"];
+            $nbCocktailsFavoris = count($_SESSION["user"]["recettesFavoris"]);
 
-        $indicesCocktailsFavoris = $_SESSION["user"]["recettesFavoris"];
-        $nbCocktailsFavoris = count($_SESSION["user"]["recettesFavoris"]);
-
-        // Affichage
-        if ($nbCocktailsFavoris > 0) {
-            $cocktailsFavoris = [];
-            foreach ($indicesCocktailsFavoris as $indice) { 
-                $cocktailsFavoris[] = $Recettes[$indice];
-            }
-            foreach ($cocktailsFavoris as $cocktailFavoris) {
-
-                echo '<div class="cocktail-card">';
-                echo '<strong>' . $cocktailFavoris['titre'] . '</strong> ';
-                
-                // LE LIEN MAGIQUE : On recharge la page en gardant la catégorie + action toggle
-                $id = array_search($cocktailFavoris, $Recettes);
-                echo '<a href="index.php?page=favoris&est_favori=' . $id . '">';
-                echo '<img src="Photos/Coeur_plein.png" width="20px" height="20px" style="vertical-align:middle;"/>';
-                echo '</a><br><br>';
-
-                // Image du cocktail
-                $nomImage = str_replace(" ","_",$cocktailFavoris['titre']) . '.jpg';
-                if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
-                echo '<img src="Photos/'.$nomImage.'" width="70" height="100"><br>';
-                
-                // Ingrédients
-                echo '<ul style="font-size:0.8em; padding-left:15px;">';
-                foreach($cocktailFavoris['index'] as $ing){
-                    echo '<li>' . htmlspecialchars($ing) . '</li>';
+            if ($nbCocktailsFavoris > 0) {
+                $cocktailsFavoris = [];
+                foreach ($indicesCocktailsFavoris as $indice) { 
+                    $cocktailsFavoris[] = $Recettes[$indice];
                 }
-                echo '</ul>';
-                echo '</div>';
+                foreach ($cocktailsFavoris as $cocktailFavoris) {
+                    $id = array_search($cocktailFavoris, $Recettes);
+        ?>
+        <div class="carte-cocktail">
+            <div class="carte-header">
+                <a href="index.php?page=recette&id=<?php echo $id; ?>" class="zone-cliquable">
+                    <div class="carte-titre"><?php echo $cocktailFavoris['titre']; ?></div>
+                </a>
+                <a href="index.php?page=favoris&est_favori=<?php echo $id; ?>">
+                    <img src="Photos/Coeur_plein.png" class="image-coeur"/>
+                </a>
+            </div>
+
+            <a href="index.php?page=recette&id=<?php echo $id; ?>" class="zone-cliquable">
+                <?php
+                    $nomImage = str_replace(" ","_",$cocktailFavoris['titre']) . '.jpg';
+                    if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
+                ?>
+                <img src="Photos/<?php echo $nomImage; ?>" class="image-cocktail">
+                <ul class="liste-ingredients">
+                    <?php
+                    foreach($cocktailFavoris['index'] as $ing){
+                        echo '<li>' . htmlspecialchars($ing) . '</li>';
+                    }
+                    ?>
+                </ul>
+            </a>
+        </div>
+        <?php
+                }
+            } else {
+                echo '<p>Aucun cocktail trouvé.</p>';
             }
-        } else {
-            echo '<p>Aucun cocktail trouvé.</p>';
-        }
-    ?>
+        ?>
+    </div>
 </main>
