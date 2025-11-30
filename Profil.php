@@ -5,12 +5,17 @@
     }
 
     function dateValide($date) {
-        $d = DateTime::createFromFormat('Y-m-d', $date);
-        if (!$d || $d->format('Y-m-d') !== $date) {
+        $dates = explode('-', $date);
+        if (count($dates) !== 3) {
             return false;
         }
+        list($annee, $mois, $jour) = $dates;
+        if (!checkdate($mois, $jour, $annee)) {
+            return false;
+        }
+        $dateActuelle = new DateTime($date);
         $ageMin = new DateTime("-18 years");
-        return $d <= $ageMin;
+        return $dateActuelle <= $ageMin;
     }
 
     $rapportErreur = "";

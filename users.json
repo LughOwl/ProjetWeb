@@ -1,60 +1,28 @@
 [
     {
-        "login": "a",
-        "password": "$2y$10$7tqq523W\/0nsZOPkyVXGqe1HHK6MlBesq\/AySySwtECvdq5T2Lj7S",
-        "nom": "aacc",
-        "prenom": "b",
-        "dateNaissance": "2003-02-07",
-        "sexe": "Homme",
-        "recettesFavoris": []
-    },
-    {
         "login": "hugoat",
-        "password": "$2y$10$1xYehekAeYbCA2Y59ofVwOlfHXnL6XTpuo0l9oTeLpdHBXHBNnMui",
-        "nom": "hugo",
-        "prenom": "b",
-        "dateNaissance": "2003-07-18",
-        "sexe": "Homme",
-        "recettesFavoris": [
-            "27",
-            "12",
-            "1",
-            "78"
-        ]
-    },
-    {
-        "login": "c",
-        "password": "$2y$10$WodUhrNz6F\/LacdeqUV0reH.Cull3KWZpr1KLrV70WeiE0SLZvwDC",
-        "nom": "c",
-        "prenom": "c",
-        "dateNaissance": "",
+        "password": "$2y$10$SimCRc8C.w1iHTdftQ\/kme08I6PfdJtI5eV4hzbW0w84XtPsZNmCC",
+        "nom": "soso",
+        "prenom": "sasa",
+        "dateNaissance": "1985-03-17",
         "sexe": "Homme",
         "recettesFavoris": []
     },
     {
-        "login": "nico",
-        "password": "$2y$10$ZKXc6rtYxKTS83Bj\/18aKeBHlm2W.cJxSt3QpMmkH77RRfT9qplEG",
-        "nom": "a",
-        "prenom": "a",
-        "dateNaissance": "",
+        "login": "salam",
+        "password": "$2y$10$T0qoUk2e0wxL2IRWm7sSG.fMe1qjLuik.AUllm9tM2\/Iyjy6JNleG",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "0001-11-30",
         "sexe": "Non defini",
         "recettesFavoris": []
     },
     {
-        "login": "b",
-        "password": "$2y$10$2bQFMPElk0N6vcssDZOk3.lhcL4eWDENN7BZCJiESVnw1fLa8GHae",
-        "nom": "b",
-        "prenom": "b",
-        "dateNaissance": "",
-        "sexe": "Homme",
-        "recettesFavoris": []
-    },
-    {
-        "login": "aa",
-        "password": "$2y$10$e\/R8IHFjHQJ4mOjiG7VXO.vkBcsQupZRz08iU8rjJCJeb4w1Zir.2",
+        "login": "ss",
+        "password": "$2y$10$0i\/hcphHkwVsSZUnM6FLn.9e2VRmUdDo09Z9Q88vJGJOBcgWQsx7y",
         "nom": "",
         "prenom": "",
-        "dateNaissance": "",
+        "dateNaissance": "2003-07-18",
         "sexe": "Homme",
         "recettesFavoris": []
     }
