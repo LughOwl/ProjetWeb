@@ -25,5 +25,14 @@
         "dateNaissance": "2003-07-18",
         "sexe": "Homme",
         "recettesFavoris": []
+    },
+    {
+        "login": "q",
+        "password": "$2y$10$L1dag0Ay1WpFHQpXlYzmbOhym2Jnefl0oxwp9yclNqHTH2o4a3Yzy",
+        "nom": "",
+        "prenom": "",
+        "dateNaissance": "",
+        "sexe": "Homme",
+        "recettesFavoris": []
     }
 ]

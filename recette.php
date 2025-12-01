@@ -14,7 +14,7 @@ if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
 }
         ?><main>
             <div class="recette-header">
-                <div class="titre-page"><?php echo htmlspecialchars($cocktail['titre']); ?></div>
+                <div class="titre-page"><?php echo $cocktail['titre']; ?></div>
                 <a href="index.php?page=recette&id=<?php echo $id; ?>&est_favori=<?php echo $id; ?>">
                     <img src="<?php echo $imageCoeur; ?>" class="image-coeur" alt="image coeur">
                 </a>
@@ -36,14 +36,14 @@ if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
                     <?php
                         $ingredients = explode('|', $cocktail['ingredients']);
                         foreach ($ingredients as $ingredient) {
-                        ?>    <li><?php echo htmlspecialchars(trim($ingredient)); ?></li>
+                        ?>    <li><?php echo trim($ingredient); ?></li>
                     <?php }
                     ?></ul>
                 </div>
                 
                 <div class="recette-preparation">
                     <div class="titre-page">Préparation</div>
-                    <div><?php echo htmlspecialchars($cocktail['preparation']); ?></div>
+                    <div><?php echo $cocktail['preparation']; ?></div>
                 </div>
                 
                 <div class="recette-categories">
@@ -51,7 +51,7 @@ if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
                     <ul>
                     <?php
                         foreach ($cocktail['index'] as $categorie) {
-                        ?>    <li><?php echo htmlspecialchars($categorie); ?></li>
+                        ?>    <li><?php echo $categorie; ?></li>
                     <?php }
                     ?></ul>
                 </div>

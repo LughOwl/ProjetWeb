@@ -14,9 +14,8 @@
         return preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $login);
     }
 
-    function nomPrenomValide($nomPrenom){
-        $pattern = '/^\p{L}+(?:[-’]\p{L}+)*(?:\s+\p{L}+(?:[-’]\p{L}+)*)*$/u';
-        return preg_match($pattern, $nomPrenom);
+    function nomPrenomValide($nomOuPrenom){
+        return preg_match("/^[A-ZÀ-ÖØ-Þa-zà-öø-ÿ]+(?:[ '-][A-ZÀ-ÖØ-Þa-zà-öø-ÿ]+)*$/", $nomOuPrenom);
     }
 
     function dateValide($date) {
