@@ -121,15 +121,18 @@
     
 ?>
 <main class="style-formulaire">
-            <form method="post" action="#">
-                <div class="titre-page">Profil</div>
-
+            <div class="titre-page">Profil</div>
 <?php
     if ($messageResultat !== "") {
         echo $messageResultat . "\n";
     }
+    if (!isset($_SESSION["user"]["login"])){
 ?>
-
+            <div>Tu n'est pas connecté(e).</div>
+<?php 
+    } else {
+?>
+            <form method="post" action="#">
                 <label for="login">Login (non modifiable):</label>
                 <input type="text" id="login" name="login" disabled value="<?php echo htmlspecialchars($valeurLogin); ?>">
 
@@ -151,4 +154,7 @@
 
                 <input type="submit" name="submit-profil" value="Enregistrer les modifications" class="bouton-submit">
             </form>
+<?php 
+    }
+?>
         </main>

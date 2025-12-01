@@ -34,5 +34,14 @@
         "dateNaissance": "",
         "sexe": "Homme",
         "recettesFavoris": []
+    },
+    {
+        "login": "a",
+        "password": "$2y$10$eD7PJdK0BbvQjqxcwuG1ceALtxQ.Ie.mD6TRI50rubpn1BkJY3NvC",
+        "nom": "a",
+        "prenom": "a",
+        "dateNaissance": "",
+        "sexe": "Homme",
+        "recettesFavoris": []
     }
 ]

@@ -147,16 +147,19 @@
                 </div>';
         }
     }
-        ?><main class="style-formulaire">
+?><main class="style-formulaire">
+            <div class="titre-page">Inscription</div>
+<?php 
+    if ($messageResultat !== "") {
+        echo $messageResultat . "\n";
+    }
+    if (isset($_SESSION["user"]["login"])){
+?>
+            <div>Tu est déjà inscrit(e).</div>
+<?php 
+    } else {
+?>
             <form method="post" action="#">
-                <div class="titre-page">Inscription</div>
-
-        <?php 
-            if ($messageResultat !== "") {
-                echo $messageResultat . "\n";
-            }
-        ?>
-
                 <label for="login">Login:</label>
                 <input type="text" id="login" name="login-inscription" required value="<?php echo htmlspecialchars($valeurLogin); ?>">
 
@@ -181,4 +184,7 @@
 
                 <input type="submit" name="submit-inscription" value="S'inscrire" class="bouton-submit">
             </form>
+<?php 
+    }
+?>
         </main>
