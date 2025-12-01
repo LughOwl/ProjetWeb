@@ -1,18 +1,20 @@
 <?php
-if (!isset($_GET['id']) || !isset($Recettes[$_GET['id']])) {
-    echo '<p>Cocktail non trouvé.</p>';
-    exit();
-}
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
 
-$id = $_GET['id'];
-$cocktail = $Recettes[$id];
+    if (!isset($_GET['id']) || !isset($Recettes[$_GET['id']])) {
+        echo '<p>Cocktail non trouvé.</p>';
+        exit();
+    }
 
-if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
-    $imageCoeur = "Photos/Coeur_plein.png";
-} else {
-    $imageCoeur = "Photos/Coeur_vide.png";
-}
-        ?><main>
+    $id = $_GET['id'];
+    $cocktail = $Recettes[$id];
+
+    if (in_array($id, $_SESSION["user"]["recettesFavoris"])) {
+        $imageCoeur = "Photos/Coeur_plein.png";
+    } else {
+        $imageCoeur = "Photos/Coeur_vide.png";
+    }
+?><main>
             <div class="recette-header">
                 <div class="titre-page"><?php echo $cocktail['titre']; ?></div>
                 <a href="index.php?page=recette&id=<?php echo $id; ?>&est_favori=<?php echo $id; ?>">

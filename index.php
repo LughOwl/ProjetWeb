@@ -2,6 +2,7 @@
 session_start();
 include 'Donnees.inc.php';
 
+// Pour charger les utilisateurs lors de la connexion
 function chargerUtilisateurs() {
     if (!file_exists("users.json")) {
         file_put_contents("users.json", "[]");
@@ -10,6 +11,7 @@ function chargerUtilisateurs() {
     return json_decode($json, true);
 }
 
+// Pour trouver un utilisateur avec son login et la liste des utilisateurs
 function recupererIdUtilisateur($login, $users) {
     foreach ($users as $index => $user) {
         if ($user['login'] === $login) {
@@ -19,34 +21,55 @@ function recupererIdUtilisateur($login, $users) {
     return -1;
 }
 
+// Pour sauvegarder un utilisateur dans le fichier json
 function sauvegarderUtilisateurs($users) {
     file_put_contents("users.json", json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 }
 
+// Pour modifier un utilisateur contenu dans le fichier json avec son login et la liste des utilisateurs qui vont être modifés donc par référence &
 function modifierUtilisateur($login, &$users) {
     foreach ($users as &$user) {
         if ($user['login'] === $login) {
-            $user['nom'] = $_SESSION["user"]["nom"];
-            $user['prenom'] = $_SESSION["user"]["prenom"];
-            $user['dateNaissance'] = $_SESSION["user"]["dateNaissance"];
-            $user['sexe'] = $_SESSION["user"]["sexe"];
+            if(isset($_SESSION["user"]["nom"])) 
+                $user['nom'] = $_SESSION["user"]["nom"]; 
+            else 
+                $user['nom'] = "";
+
+            if(isset($_SESSION["user"]["prenom"])) 
+                $user['prenom'] = $_SESSION["user"]["prenom"]; 
+            else 
+                $user['prenom'] = "";
+
+            if(isset($_SESSION["user"]["dateNaissance"])) 
+                $user['dateNaissance'] = $_SESSION["user"]["dateNaissance"]; 
+            else 
+                $user['dateNaissance'] = "";
+
+            if(isset($_SESSION["user"]["sexe"])) 
+                $user['sexe'] = $_SESSION["user"]["sexe"]; 
+            else 
+                $user['sexe'] = "";
             break;
         }
     }
     sauvegarderUtilisateurs($users);
 }
 
+// Si on clique sur le bouton déconnexion, on détruit la session
 if (isset($_POST['deconnexion'])) {
     session_destroy();
     header("Location: index.php");
     exit();
 }
 
+// Si on clique sur le bouton recherche, on fait une recherche avec le trxte contenu dans l'input texteRecherche
 if (isset($_GET['submit-recherche'])) {
     header("Location: index.php?page=recherche&texteRecherche=" . $_GET['texteRecherche']);
     exit();
 }
 
+// Lorsqu'on clique sur Connexion, on vérifie d'abord que les deux input ne sont pas vide 
+// pour ensuite faire les vérification pour tenter de connecter l'utilisateur
 if (!empty($_POST['login-nav']) && !empty($_POST['motDePasse-nav'])) {
     $login = trim($_POST['login-nav']);
     $password_soumis = $_POST['motDePasse-nav'];
@@ -69,6 +92,9 @@ if (!empty($_POST['login-nav']) && !empty($_POST['motDePasse-nav'])) {
     $erreur_connexion = "Identifiants incorrects.";
 }
 
+// On initialise une liste de page pour ensuite mettre à jour la variable 
+// $pageCourante en récupérant "page=..." dans l'url,
+// si "page" est mal initialisé, on met la page courante à 'navigation'
 $listePages = ['navigation', 'favoris', 'inscription', 'profil', 'recherche', 'recette'];
 
 if (isset($_GET['page']) && in_array($_GET['page'], $listePages)) {
@@ -77,25 +103,27 @@ if (isset($_GET['page']) && in_array($_GET['page'], $listePages)) {
     $pageCourante = 'navigation';
 }
 
+// Si le tableau de recettes favorites n'est pas initialisé, on le fait
 if (!isset($_SESSION["user"]["recettesFavoris"])) {
     $_SESSION["user"]["recettesFavoris"] = [];
 }
 
-if (!isset($_GET['categorie'])) {
+// Met à jour le chemin et la variable $categorieActuelle pour naviguer dans la page Navigation
+if (isset($_GET['chemin'])) {
+    $cheminCourant = $_GET['chemin'];
+    $hierarchieChemin = explode('_', $cheminCourant);
+    $categorieActuelle = end($hierarchieChemin);
+} else {
+    $cheminCourant = 'Aliment';
     $categorieActuelle = 'Aliment';
-} else {
-    $categorieActuelle = $_GET['categorie'];
 }
 
-if (!isset($_GET['parent'])) {
-    $parent = '';
-} else {
-    $parent = $_GET['parent'];
-}
-
+// Pour gérer le clic du bouton coeur dans différentes conditions 
+// avec "est_favoris=..." dans l'url
 if (isset($_GET['est_favori'])) {
     $idRecette = $_GET['est_favori'];
     
+    // Si la recette est dans le tableau des favoris on l'enlève, sinon on l'ajoute
     if (in_array($idRecette, $_SESSION["user"]["recettesFavoris"])) {
         $indice = array_search($idRecette, $_SESSION["user"]["recettesFavoris"]);
         unset($_SESSION["user"]["recettesFavoris"][$indice]);
@@ -104,6 +132,7 @@ if (isset($_GET['est_favori'])) {
         $_SESSION["user"]["recettesFavoris"][] = $idRecette;
     }
     
+    // Si on est connecté, on met à jour les favoris et on sauveafrde dans le json
     if (isset($_SESSION["user"]["login"])) {
         $utilisateurs = chargerUtilisateurs();
         $login_actuel = $_SESSION["user"]["login"];
@@ -117,10 +146,11 @@ if (isset($_GET['est_favori'])) {
         }
     }
     
+    // Permet de gérer le clic du bouton coeur si on est soit dans navigation, soit dans recherche, soit dans recette
     $urlRedirection = "index.php?page=" . $pageCourante;
     if ($pageCourante === 'navigation') {
         $ancre = "#recette-" . $idRecette;
-        $urlRedirection .= "&categorie=" . urlencode($categorieActuelle) . "&parent=" . urlencode($parent) . $ancre;
+        $urlRedirection .= "&chemin=" . urlencode($cheminCourant) . $ancre;
     }
     if ($pageCourante === 'recherche') {
         $ancre = "#recette-" . $idRecette;
@@ -209,6 +239,8 @@ if (isset($_GET['est_favori'])) {
     <?php } 
     ?><div class="structure">
         <?php
+        // affiche la page correspondant à la variable $pageCourante 
+        // mis à jour avec des "page=..." dans l'url
         switch ($pageCourante) {
             case 'navigation':
                 include 'navigation.php';

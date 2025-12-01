@@ -1,8 +1,12 @@
 <?php
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
+    
     if (!isset($_SESSION["user"]) || !is_array($_SESSION["user"])) {
         $_SESSION["user"] = [];
     }
 
+    //Initialisation par défaut des valeurs du formulaire, 
+    // le nom des variable et fonctions sont assez explicite pour comprendre le code
     $messageResultat = "";
     $valeurLogin = "";
     $valeurNom = "";
@@ -41,6 +45,8 @@
         return false;
     }
 
+    // Toute la gestion des variables et de la vérification 
+    // lorsqu'on clique sur le bonton submit du formulaire
     if (isset($_POST["submit-inscription"])) {
         $rapportErreur = "";
 

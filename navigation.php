@@ -1,41 +1,22 @@
 <aside>
 <?php
-    function genererFilAriane($categorie, $hierarchie) {
-        $filAriane = [];
-        $categorieCourante = $categorie;
-        
-        $parentPrevu = isset($_GET['parent']) ? urldecode($_GET['parent']) : null;
-
-        while ($categorieCourante && $categorieCourante !== 'Aliment') {
-            array_unshift($filAriane, $categorieCourante);
-            $trouvee = false;
-            
-            if ($parentPrevu && $categorieCourante === $categorie) {
-                if (isset($hierarchie[$parentPrevu]['sous-categorie']) && in_array($categorieCourante, $hierarchie[$parentPrevu]['sous-categorie'])) {
-                    $categorieCourante = $parentPrevu;
-                    $trouvee = true;
-                    $parentPrevu = null;
-                }
-            }
-            if (!$trouvee) {
-                foreach ($hierarchie as $cat => $data) {
-                    if (isset($data['sous-categorie']) && in_array($categorieCourante, $data['sous-categorie'])) {
-                        $categorieCourante = $cat;
-                        $trouvee = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!$trouvee) break;
-        }
-        array_unshift($filAriane, 'Aliment');
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
+    
+    function genererFilAriane($cheminString) {
+        $categories = explode('_', $cheminString);
         
         $html = '';
-        foreach ($filAriane as $index => $cat) {
-            if ($index > 0) $html .= ' / 
-                ';
-            $html .= '<a href="index.php?page=navigation&categorie=' . urlencode($cat) . '">';
+        $cheminEnCours = [];
+
+        foreach ($categories as $index => $cat) {
+            $cheminEnCours[] = $cat;
+            $lienVersCetteEtape = implode('_', $cheminEnCours);
+
+            if ($index > 0) {
+                $html .= ' / ';
+            }
+            
+            $html .= '<a href="index.php?page=navigation&chemin=' . urlencode($lienVersCetteEtape) . '">';
             $html .= $cat;
             $html .= '</a>';
         }
@@ -54,7 +35,7 @@
 ?>
             <div class="titre-page">Aliment courant</div>
             <p>
-                <?php echo genererFilAriane($categorieActuelle, $Hierarchie);?>
+                <?php echo genererFilAriane($cheminCourant);?>
             
             </p>
 <?php
@@ -64,9 +45,10 @@
             <ul>
 <?php 
         foreach ($Hierarchie[$categorieActuelle]['sous-categorie'] as $sousCat) {
+            $nouveauChemin = $cheminCourant . '_' . $sousCat;
 ?>
                 <li>
-                    <a href="index.php?page=navigation&categorie=<?php echo urlencode($sousCat); ?>&parent=<?php echo urlencode($categorieActuelle); ?>">
+                    <a href="index.php?page=navigation&chemin=<?php echo urlencode($nouveauChemin); ?>">
                         <?php echo $sousCat; ?>
                     
                     </a>
@@ -111,10 +93,9 @@
                         <a href="index.php?page=recette&id=<?php echo $recette['id']; ?>" class="zone-cliquable">
                             <div class="carte-titre"><?php echo $recette['titre']; ?></div>
                         </a>
-                        <a href="index.php?categorie=<?php 
-                            echo urlencode($categorieActuelle); ?>&est_favori=<?php 
-                            echo urlencode($recette['id']); ?><?php if(isset($_GET['parent'])) { 
-                            echo '&parent=' . urlencode($_GET['parent']); } ?>">
+                        <a href="index.php?chemin=<?php 
+                            echo urlencode($cheminCourant); ?>&est_favori=<?php 
+                            echo urlencode($recette['id']); ?>">
                             <img src="<?php echo $imageCoeur; ?>" class="image-coeur" alt="image coeur">
                         </a>
                     </div>
@@ -132,12 +113,12 @@
                     </a>
                 </div>
 <?php
-        } // Fin foreach cocktails
+        }
     } else {
 ?>
             <p>Aucun cocktail trouvé.</p>
 <?php
-    } // Fin if count($cocktailsTrouves)
+    }
 ?>
             </div>
         </main>

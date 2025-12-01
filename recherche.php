@@ -1,4 +1,6 @@
 <?php
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
+    
     function afficherListes($elementsVoulus, $elementsNonVoulus, $elementsInconnus) {
         if (!empty($elementsVoulus)) {
             echo "                <div>Liste des aliments souhaités :&nbsp;";

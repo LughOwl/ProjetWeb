@@ -1,7 +1,8 @@
 <?php
-    function nomPrenomValide($nomPrenom){
-        $pattern = '/^\p{L}+(?:[-’]\p{L}+)*(?:\s+\p{L}+(?:[-’]\p{L}+)*)*$/u';
-        return preg_match($pattern, $nomPrenom);
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
+    
+    function nomPrenomValide($nomOuPrenom){
+        return preg_match("/^[A-ZÀ-ÖØ-Þa-zà-öø-ÿ]+(?:[ '-][A-ZÀ-ÖØ-Þa-zà-öø-ÿ]+)*$/", $nomOuPrenom);
     }
 
     function dateValide($date) {
@@ -109,7 +110,6 @@
             $utilisateurs = chargerUtilisateurs();
             modifierUtilisateur($_SESSION["user"]["login"], $utilisateurs);
             sauvegarderUtilisateurs($utilisateurs); 
-            
             $messageResultat = '                <div class="enregistrement">Les enregistrements ont bien été pris en compte.</div>';              
         } else {
             $messageResultat = '                <div class="erreur">
@@ -118,7 +118,6 @@
                 </div>';
         }
     }
-    
 ?>
 <main class="style-formulaire">
             <div class="titre-page">Profil</div>

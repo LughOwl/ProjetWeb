@@ -2,16 +2,18 @@
             <div class="titre-page">Liste des cocktails favoris</div>
             <div class="affichage-cocktails">
 <?php
-                    $indicesCocktailsFavoris = $_SESSION["user"]["recettesFavoris"];
-                    $nbCocktailsFavoris = count($_SESSION["user"]["recettesFavoris"]);
+    // Code HTML et PHP indenté étrangement pour respecter l'indentaion lorsqu'on fait clic droit puis "page source"
+    
+    $indicesCocktailsFavoris = $_SESSION["user"]["recettesFavoris"];
+    $nbCocktailsFavoris = count($_SESSION["user"]["recettesFavoris"]);
 
-                    if ($nbCocktailsFavoris > 0) {
-                        $cocktailsFavoris = [];
-                        foreach ($indicesCocktailsFavoris as $indice) { 
-                            $cocktailsFavoris[] = $Recettes[$indice];
-                        }
-                        foreach ($cocktailsFavoris as $cocktailFavoris) {
-                            $id = array_search($cocktailFavoris, $Recettes);
+    if ($nbCocktailsFavoris > 0) {
+        $cocktailsFavoris = [];
+        foreach ($indicesCocktailsFavoris as $indice) { 
+            $cocktailsFavoris[] = $Recettes[$indice];
+        }
+        foreach ($cocktailsFavoris as $cocktailFavoris) {
+            $id = array_search($cocktailFavoris, $Recettes);
 ?>
                 <div class="carte-cocktail">
                     <div class="carte-header">
@@ -24,25 +26,28 @@
                     </div>
                     <a href="index.php?page=recette&id=<?php echo $id; ?>" class="zone-cliquable">
 <?php
-                            $nomImage = str_replace(" ","_",$cocktailFavoris['titre']) . '.jpg';
-                            if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
+            $nomImage = str_replace(" ","_",$cocktailFavoris['titre']) . '.jpg';
+            if(!file_exists("Photos/".$nomImage)) $nomImage = "default.jpg";
 ?>
                         <img src="Photos/<?php echo $nomImage; ?>" class="image-cocktail" alt="image cocktail">
                         <ul class="liste-ingredients">
 <?php
-                            foreach($cocktailFavoris['index'] as $ing){
-                                echo '                            <li>' . htmlspecialchars($ing) . '</li>
-';
-                            }
+            foreach($cocktailFavoris['index'] as $ing){ 
+?>
+                            <li> <?php echo $ing ?> </li>
+<?php
+            }
 ?>
                         </ul>
                     </a>
                 </div>
 <?php
-                        }
-                    } else {
-                        echo '<p>Aucun cocktail trouvé.</p>';
-                    }
+        }
+    } else {
+?>
+            <p><?php echo 'Aucun cocktail trouvé.';?></p>
+<?php
+    }
 ?>
             </div>
         </main>
